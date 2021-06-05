@@ -102,6 +102,20 @@ export const constantRoutes = [
         meta: { title: 'profile', icon: 'user', noCache: true }
       }
     ]
+  },
+  {
+    path: '/grafana',
+    component: Layout,
+    children: [
+      {
+        path: 'index/:ip/:port',
+        component: () => import('@/components/GrafanaPage/index'),
+        name: 'Grafana',
+        hidden: true,
+        meta: { title: 'Grafana', icon: 'yicongrafana', noCache: false },
+        props: true
+      }
+    ]
   }
 ]
 
