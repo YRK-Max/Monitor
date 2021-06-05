@@ -5,6 +5,9 @@ import router, { resetRouter } from '@/router'
 const state = {
   token: getToken(),
   name: '',
+  username: '',
+  id: '',
+  email: '',
   avatar: '',
   introduction: '',
   roles: []
@@ -20,6 +23,15 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
+  SET_USERNAME: (state, username) => {
+    state.username = username
+  },
+  SET_ID: (state, id) => {
+    state.id = id
+  },
+  SET_EMAIL: (state, email) => {
+    state.email = email
+  },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   },
@@ -32,11 +44,12 @@ const actions = {
   // user login
   login({ commit }, userInfo) {
     const { username, password } = userInfo
+    const params = { client_id: 'CISServer_App', client_secret: '1q2w3e*', grant_type: 'password', username: username.trim(), password: password }
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+      login(params).then(response => {
+        const data = response
+        commit('SET_TOKEN', data['access_token'])
+        setToken(data['access_token'])
         resolve()
       }).catch(error => {
         reject(error)
@@ -47,23 +60,37 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
+      getInfo().then(response => {
+        const data = response
 
         if (!data) {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, name, avatar, introduction } = data
+        const { role, name, given_name, sub, email, introduction } = data
+
+        // 请求的role可能是string(一个权限)或是Array(多个权限), 需要将string转成Array用于后续按照权限生成路由
+        // 也可能出现没有role的情况
+        let roles
+        if (typeof role === 'string') {
+          roles = [role]
+        } else {
+          roles = role
+        }
+        data['roles'] = roles
+        // console.log(data)
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
+          reject('没有角色权限的账户无法登录!')
         }
 
         commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        commit('SET_NAME', given_name)
+        commit('SET_USERNAME', name)
+        commit('SET_ID', sub)
+        commit('SET_EMAIL', email)
+        commit('SET_AVATAR', '/avatar.svg')
         commit('SET_INTRODUCTION', introduction)
         resolve(data)
       }).catch(error => {
