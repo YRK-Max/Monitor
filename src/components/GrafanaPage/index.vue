@@ -6,13 +6,25 @@
 export default {
   name: 'GrafanaPage',
   props: {
-    ip: {
+    server: {
       type: String,
-      default: '127.0.0.1'
+      default: '127.0.0.1:9100'
     },
-    port: {
+    uid: {
       type: String,
-      default: '3000'
+      default: '9CWBz0bik'
+    },
+    name: {
+      type: String,
+      default: 'identity'
+    },
+    job: {
+      type: String,
+      default: ''
+    },
+    node: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -22,7 +34,8 @@ export default {
   },
   computed: {
     target() {
-      return 'http://' + this.ip + ':' + this.port + '/d/9CWBz0bik/bao-biao-fu-wu-qi-jian-kong?orgId=1&kiosk'
+      console.log('http://' + this.server + '/d/' + this.uid + '/' + this.name + '?orgId=1&kiosk&var-origin_prometheus=&var-job=' + this.job + '&var-hostname=All&var-node=' + this.node + '&var-device=All&var-interval=2m&var-maxmount=%2F&var-show_hostname=localhost.localdomain&var-total=1')
+      return 'http://' + this.server + '/d/' + this.uid + '/' + this.name + '?orgId=1&kiosk&var-origin_prometheus=&var-job=' + this.job + '&var-hostname=All&var-node=' + this.node + '&var-device=All&var-interval=2m&var-maxmount=%2F&var-show_hostname=localhost.localdomain&var-total=1'
     }
   }
 }

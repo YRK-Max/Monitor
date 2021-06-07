@@ -36,6 +36,11 @@ module.exports = {
         target: 'http://10.3.5.124:44369',
         ws: false,
         changeOrigin: true
+      },
+      '/api': {
+        target: 'http://10.3.5.124:9090',
+        ws: false,
+        changeOrigin: true
       }
     }
   },

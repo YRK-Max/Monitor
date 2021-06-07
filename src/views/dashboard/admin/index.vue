@@ -1,8 +1,5 @@
 <template>
   <div class="dashboard-editor-container">
-    <router-link :to="{name: 'Grafana', params: {ip: '10.3.5.113', port: '3000'}}">
-      <el-button>监控看板</el-button>
-    </router-link>
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">

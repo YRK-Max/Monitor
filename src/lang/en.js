@@ -63,7 +63,8 @@ export default {
     i18n: 'I18n',
     externalLink: 'External Link',
     profile: 'Profile',
-    Grafana: 'Grafana'
+    Grafana: 'Grafana',
+    NodeList: 'Node List'
   },
   navbar: {
     dashboard: 'Dashboard',

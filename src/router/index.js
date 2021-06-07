@@ -116,6 +116,19 @@ export const constantRoutes = [
         props: true
       }
     ]
+  },
+  {
+    path: '/manager',
+    component: Layout,
+    children: [
+      {
+        path: '/monitor',
+        component: () => import('@/views/monitor/NodeList'),
+        name: 'NodeList',
+        meta: { title: 'NodeList', icon: 'yicongrafana', noCache: false },
+        props: true
+      }
+    ]
   }
 ]
 
