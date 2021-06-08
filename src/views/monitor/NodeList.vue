@@ -14,7 +14,7 @@
     </el-col>
     <el-col :span="24">
       <div style="margin: 10px">
-        <label>Grafana Server : </label><label style="color: #0090ff">{{ Grafana.server }}</label>
+        <label>Grafana Server : </label><el-tag>{{ Grafana.server }}</el-tag>
       </div>
     </el-col>
     <el-col :span="24">
@@ -23,27 +23,14 @@
         header
       >
         <div slot="header" class="clearfix">
-          <span>Active Targets</span>
+          <span>Windows 服务器</span>
         </div>
         <el-table
-          :data="nodeList"
+          :data="windowsNodeList"
           :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
           tooltip-effect="dark"
           @row-click="handleRowClick"
         >
-          <el-table-column
-            prop="title"
-            label="Title"
-          />
-          <el-table-column
-            prop="uid"
-            label="uid"
-          />
-          <el-table-column
-            prop="url"
-            label="url"
-            :show-overflow-tooltip="true"
-          />
           <el-table-column
             prop="job"
             label="JOB"
@@ -64,12 +51,27 @@
           </el-table-column>
           <el-table-column
             prop="instance"
-            label="Node"
+            label="Instance"
             sortable
           />
           <el-table-column
             prop="lastError"
             label="Last Error"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            prop="product"
+            label="OS"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            prop="version"
+            label="版本"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            prop="active_state"
+            label="活动状态"
             :show-overflow-tooltip="true"
           />
         </el-table>
@@ -79,26 +81,14 @@
         header
       >
         <div slot="header" class="clearfix">
-          <span>Dropped Targets</span>
+          <span>Linux 服务器</span>
         </div>
         <el-table
-          :data="droppedNodes"
+          :data="linuxNodeList"
           :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
           tooltip-effect="dark"
           @row-click="handleRowClick"
         >
-          <el-table-column
-            prop="title"
-            label="Title"
-          />
-          <el-table-column
-            prop="uid"
-            label="uid"
-          />
-          <el-table-column
-            prop="url"
-            label="url"
-          />
           <el-table-column
             prop="job"
             label="JOB"
@@ -118,13 +108,33 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="labels.instance"
-            label="Node"
+            prop="nodename"
+            label="Node Name"
+            sortable
+          />
+          <el-table-column
+            prop="instance"
+            label="Instance"
             sortable
           />
           <el-table-column
             prop="lastError"
             label="Last Error"
+          />
+          <el-table-column
+            prop="sysname"
+            label="OS"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            prop="version"
+            label="版本"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            prop="active_state"
+            label="活动状态"
+            :show-overflow-tooltip="true"
           />
         </el-table>
       </el-card>
@@ -133,7 +143,7 @@
 </template>
 
 <script>
-import { getDatasources, getJobList, getNodeList, getStatus, getTemplatingLabel } from '@/api/prometheus'
+import { getAllNodeInfo, getOSNodeList } from '@/api/prometheus'
 
 export default {
   name: 'NodeList',
@@ -142,62 +152,131 @@ export default {
       Grafana: {
         server: '10.3.5.124:3000'
       },
-      nodeList: [],
-      droppedNodes: []
+      windowsNodeList: [],
+      linuxNodeList: []
     }
   },
   created() {
-    getDatasources().then(res => {
-      console.log(res)
-    })
     this.initNodeData()
   },
   methods: {
     handleRowClick(row) {
-      const pinyin = require('pinyin')
-      const params = { server: this.Grafana.server, uid: row['uid'], name: pinyin(row['title'], { style: pinyin.STYLE_NORMAL }).join('-'), job: row['job'], node: row['instance'] }
-      console.log(row)
-      console.log(params)
       this.$router.push({
         name: 'Grafana',
-        params: params
+        params: { url: row['url'] }
       })
     },
     async initNodeData() {
-      const finalList = []
-      const results = await getNodeList()
-      const status = await getStatus()
-      for (const result of results) {
-        const nodeResult = await getTemplatingLabel(result['uid'])
-        const dashboard = nodeResult['dashboard']
-        if (dashboard['templating'] && dashboard['templating']['list']) {
-          const templating = dashboard['templating']['list']
-          const templateJobList = templating.filter(t => { return t['name'] === 'job' })
-          if (templateJobList.length > 0) {
-            const query = templateJobList[0]['query'].split('(')[1].split(',')[0]
-            const jobList = await getJobList(query)
-            console.log(jobList)
-            if (jobList['data'] && jobList['data']['result']) {
-              jobList['data']['result'].forEach(m => {
-                const metric = JSON.parse(JSON.stringify((m['metric'])))
-                const temp = JSON.parse(JSON.stringify(result))
-                temp['hostname'] = metric['hostname']
-                temp['instance'] = metric['instance']
-                temp['job'] = metric['job']
-                for (const s of status['data']['activeTargets']) {
-                  if (s['labels']['job'] === temp['job']) {
-                    temp['health'] = s['health']
-                    temp['lastError'] = s['lastError']
-                  }
-                }
-                finalList.push(temp)
-              })
+      const linux_list = []
+      const windows_list = []
+      let nodeInfoList = []
+      const url_ref_list = [
+        {
+          'Group': 'Dashboard',
+          'Name': 'Windows服务器监控',
+          'JOB': 'Cissystem_Linux',
+          'Targets': '10.3.5.124:9100',
+          'Uid': '9CWBz0bikw',
+          'Url': 'http://{@IPAddress}/d/9CWBz0bikw/linux-fu-wu-qi-jian-kong?orgId=1'
+        },
+        {
+          'Group': 'Dashboard',
+          'Name': 'Windows服务器监控',
+          'JOB': 'CisServer_Windows',
+          'Targets': '10.3.5.104:9182',
+          'Uid': 'Kdh0OoSGz',
+          'Url': 'http://{@IPAddress}/d/Kdh0OoSGz/windowsfu-wu-qi-jian-kong?orgId=1'
+        },
+        {
+          'Group': 'Dashboard',
+          'Name': '.NET Core -App',
+          'JOB': 'CisServerApi',
+          'Targets': '10.3.5.104:44344',
+          'Uid': 'h1FE3PpWk',
+          'Url': 'http://{@IPAddress}/d/h1FE3PpWk/net-core-app?orgId=1'
+        },
+        {
+          'Group': 'Dashboard',
+          'Name': 'Linux 服务器监控',
+          'JOB': 'EQLinker_windows',
+          'Targets': '10.3.5.109:9182',
+          'Uid': 'Kdh0OoSGz',
+          'Url': 'http://{@IPAddress}/d/Kdh0OoSGz/windowsfu-wu-qi-jian-kong?orgId=1&var-job=EQLinker_windows&var-hostname=All&var-instance=10.3.5.109:9182&var-show_hostname=DESKTOP-FIQS2U7'
+        },
+        {
+          'Group': 'Dashboard',
+          'Name': 'Linux 服务器监控',
+          'JOB': 'WebUI_Linux',
+          'Targets': '10.3.5.116:9100',
+          'Uid': '9CWBz0bikw',
+          'Url': 'http://{@IPAddress}/d/9CWBz0bikw/linux-fu-wu-qi-jian-kong?orgId=1&var-job=WebUI_Linux&var-hostname=All&var-node=10.3.5.116:9100&var-device=All&var-maxmount=%2F&var-show_hostname=localhost.localdomain'
+        },
+        {
+          'Group': 'Dashboard',
+          'Name': 'CIS30 服务器集合',
+          'JOB': '--',
+          'Targets': '10.3.5.124:3000',
+          'Uid': '-C03y-3Gz',
+          'Url': 'http://{@IPAddress}/d/-C03y-3Gz/cis30-fu-wu-qi-ji-he?orgId=1'
+        }
+      ]
+      const res_nodeInfoList = await getAllNodeInfo()
+      const res_list_linux = await getOSNodeList('node_uname_info')
+      const res_list_windows = await getOSNodeList('windows_os_info')
+
+      if (res_nodeInfoList && res_nodeInfoList['status'].toString() === 'success' && res_nodeInfoList['data']['activeTargets']) {
+        const active_list = res_nodeInfoList['data']['activeTargets']
+        active_list.forEach(d => { d['active_state'] = 'active' })
+        const dropped_list = res_nodeInfoList['data']['droppedTargets']
+        dropped_list.forEach(d => { d['active_state'] = 'dropped' })
+        nodeInfoList = Object.assign(active_list, ...dropped_list)
+      }
+
+      if (res_list_linux['status'].toString() === 'success') {
+        res_list_linux['data']['result'].forEach(d => {
+          const temp = d['metric']
+          for (const ni of nodeInfoList) {
+            if (ni['labels']['job'] === temp['job']) {
+              temp['active_state'] = ni['active_state']
+              temp['health'] = ni['health']
+              temp['lastError'] = ni['lastError']
+              break
             }
           }
-        }
+
+          for (const ref of url_ref_list) {
+            if (ref['JOB'] === temp['job']) {
+              temp['url'] = ref['Url'].replace('{@IPAddress}', this.Grafana.server) + '&kiosk'
+              break
+            }
+          }
+          linux_list.push(temp)
+        })
       }
-      console.log(finalList)
-      this.nodeList = finalList
+      if (res_list_windows['status'].toString() === 'success') {
+        res_list_windows['data']['result'].forEach(d => {
+          const temp = d['metric']
+          for (const ni of nodeInfoList) {
+            if (ni['labels']['job'] === temp['job']) {
+              temp['active_state'] = ni['active_state']
+              temp['health'] = ni['health']
+              temp['lastError'] = ni['lastError']
+              break
+            }
+
+            for (const ref of url_ref_list) {
+              if (ref['JOB'] === temp['job']) {
+                temp['url'] = ref['Url'].replace('{@IPAddress}', this.Grafana.server) + '&kiosk'
+                break
+              }
+            }
+          }
+          windows_list.push(temp)
+        })
+      }
+
+      this.linuxNodeList = linux_list
+      this.windowsNodeList = windows_list
     }
   }
 }

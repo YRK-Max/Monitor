@@ -37,10 +37,21 @@ module.exports = {
         ws: false,
         changeOrigin: true
       },
-      '/api': {
+      '/prometheus': {
+        target: 'http://10.3.5.124:9090',
+        ws: false,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/prometheus': '/api' // rewrite path
+        }
+      },
+      '/grafana': {
         target: 'http://10.3.5.124:3000',
         ws: false,
-        changeOrigin: true
+        changeOrigin: true,
+        pathRewrite: {
+          '^/grafana': '/api' // rewrite path
+        }
       }
     }
   },

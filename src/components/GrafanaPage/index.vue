@@ -6,23 +6,7 @@
 export default {
   name: 'GrafanaPage',
   props: {
-    server: {
-      type: String,
-      default: '127.0.0.1:9100'
-    },
-    uid: {
-      type: String,
-      default: '9CWBz0bik'
-    },
-    name: {
-      type: String,
-      default: 'identity'
-    },
-    job: {
-      type: String,
-      default: ''
-    },
-    node: {
+    url: {
       type: String,
       default: ''
     }
@@ -34,8 +18,7 @@ export default {
   },
   computed: {
     target() {
-      console.log('http://' + this.server + '/d/' + this.uid + '/' + this.name + '?orgId=1&kiosk&var-origin_prometheus=&var-job=' + this.job + '&var-hostname=All&var-node=' + this.node + '&var-device=All&var-interval=2m&var-maxmount=%2F&var-show_hostname=localhost.localdomain&var-total=1')
-      return 'http://' + this.server + '/d/' + this.uid + '/' + this.name + '?orgId=1&kiosk&var-origin_prometheus=&var-job=' + this.job + '&var-hostname=All&var-node=' + this.node + '&var-device=All&var-interval=2m&var-maxmount=%2F&var-show_hostname=localhost.localdomain&var-total=1'
+      return this.url
     }
   }
 }
