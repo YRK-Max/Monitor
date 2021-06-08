@@ -64,7 +64,9 @@ export default {
     externalLink: '外链',
     profile: '个人中心',
     Grafana: '监控面板',
-    NodeList: 'Node 列表'
+    NodeList: 'Node 列表',
+    ServiceList: '服务列表',
+    Monitor: '监控服务'
   },
   navbar: {
     dashboard: '首页',

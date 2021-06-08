@@ -78,18 +78,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/documentation',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: { title: 'documentation', icon: 'documentation', affix: false }
-      }
-    ]
-  },
-  {
     path: '/profile',
     component: Layout,
     redirect: '/profile/index',
@@ -120,12 +108,20 @@ export const constantRoutes = [
   {
     path: '/manager',
     component: Layout,
+    meta: { title: 'Monitor', icon: 'yicongrafana' },
     children: [
       {
         path: '/monitor',
         component: () => import('@/views/monitor/NodeList'),
         name: 'NodeList',
-        meta: { title: 'NodeList', icon: 'yicongrafana', noCache: false },
+        meta: { title: 'NodeList', icon: 'yiconprometheusprometheusjiankongfuwu', noCache: false },
+        props: true
+      },
+      {
+        path: '/serviceMonitor',
+        component: () => import('@/views/monitor/ServiceList'),
+        name: 'ServiceList',
+        meta: { title: 'ServiceList', icon: 'yicondowntime', noCache: false },
         props: true
       }
     ]

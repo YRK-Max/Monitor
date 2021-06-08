@@ -64,7 +64,9 @@ export default {
     externalLink: 'External Link',
     profile: 'Profile',
     Grafana: 'Grafana',
-    NodeList: 'Node List'
+    NodeList: 'Node List',
+    ServiceList: 'Service List',
+    Monitor: 'Monitor'
   },
   navbar: {
     dashboard: 'Dashboard',

@@ -23,7 +23,7 @@
         header
       >
         <div slot="header" class="clearfix">
-          <span>Windows 服务器</span>
+          <span>服务列表</span>
         </div>
         <el-table
           :data="windowsNodeList"
@@ -57,87 +57,6 @@
           <el-table-column
             prop="lastError"
             label="Last Error"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            prop="product"
-            label="OS"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            prop="version"
-            label="版本"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            prop="active_state"
-            label="活动状态"
-            :show-overflow-tooltip="true"
-          >
-            <template slot-scope="scope">
-              <div style="display: flex; align-content: center">
-                <el-tag :type="scope.row['active_state'] === 'active'?'success':'danger'" size="small">{{
-                  scope.row['active_state']
-                }}
-                </el-tag>
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-card>
-      <el-card
-        style="margin: 5px; width: calc(100% - 10px)"
-        header
-      >
-        <div slot="header" class="clearfix">
-          <span>Linux 服务器</span>
-        </div>
-        <el-table
-          :data="linuxNodeList"
-          :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
-          tooltip-effect="dark"
-          @row-click="handleRowClick"
-        >
-          <el-table-column
-            prop="job"
-            label="JOB"
-          />
-          <el-table-column
-            prop="health"
-            label="Status"
-          >
-            <template slot-scope="scope">
-              <div style="display: flex; align-content: center">
-                <i :class="['yicon-common', 'yiconB', scope.row['health']]" />
-                <el-tag :type="scope.row['health'] === 'up'?'success':'danger'" size="small">{{
-                  scope.row['health']
-                }}
-                </el-tag>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="nodename"
-            label="Node Name"
-            sortable
-          />
-          <el-table-column
-            prop="instance"
-            label="Instance"
-            sortable
-          />
-          <el-table-column
-            prop="lastError"
-            label="Last Error"
-          />
-          <el-table-column
-            prop="sysname"
-            label="OS"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            prop="version"
-            label="版本"
             :show-overflow-tooltip="true"
           />
           <el-table-column
@@ -179,13 +98,16 @@ export default {
   },
   methods: {
     handleRowClick(row) {
-      this.$router.push({
-        name: 'Grafana',
-        params: { url: row['url'] }
-      })
+      if (row['url']) {
+        this.$router.push({
+          name: 'Grafana',
+          params: { url: row['url'] }
+        })
+      } else {
+        this.$message.info('该服务未配置看板')
+      }
     },
     async initNodeData() {
-      const linux_list = []
       const windows_list = []
       let nodeInfoList = []
       const url_ref_list = [
@@ -239,8 +161,7 @@ export default {
         }
       ]
       const res_nodeInfoList = await getAllNodeInfo()
-      const res_list_linux = await getOSNodeList('node_uname_info')
-      const res_list_windows = await getOSNodeList('windows_os_info')
+      const res_list_service = await getOSNodeList('up')
 
       if (res_nodeInfoList && res_nodeInfoList['status'].toString() === 'success' && res_nodeInfoList['data']['activeTargets']) {
         const active_list = res_nodeInfoList['data']['activeTargets']
@@ -250,29 +171,8 @@ export default {
         nodeInfoList = Object.assign(active_list, ...dropped_list)
       }
 
-      if (res_list_linux['status'].toString() === 'success') {
-        res_list_linux['data']['result'].forEach(d => {
-          const temp = d['metric']
-          for (const ni of nodeInfoList) {
-            if (ni['labels']['job'] === temp['job']) {
-              temp['active_state'] = ni['active_state']
-              temp['health'] = ni['health']
-              temp['lastError'] = ni['lastError']
-              break
-            }
-          }
-
-          for (const ref of url_ref_list) {
-            if (ref['JOB'] === temp['job']) {
-              temp['url'] = ref['Url'].replace('{@IPAddress}', this.Grafana.server) + '&kiosk'
-              break
-            }
-          }
-          linux_list.push(temp)
-        })
-      }
-      if (res_list_windows['status'].toString() === 'success') {
-        res_list_windows['data']['result'].forEach(d => {
+      if (res_list_service['status'].toString() === 'success') {
+        res_list_service['data']['result'].forEach(d => {
           const temp = d['metric']
           for (const ni of nodeInfoList) {
             if (ni['labels']['job'] === temp['job']) {
@@ -293,7 +193,6 @@ export default {
         })
       }
 
-      this.linuxNodeList = linux_list
       this.windowsNodeList = windows_list
     }
   }
