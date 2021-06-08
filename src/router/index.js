@@ -108,7 +108,7 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'index/:ip/:port',
+        path: 'index/:server/:uid/:name/:job/:node',
         component: () => import('@/components/GrafanaPage/index'),
         name: 'Grafana',
         hidden: true,

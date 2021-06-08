@@ -38,7 +38,7 @@ module.exports = {
         changeOrigin: true
       },
       '/api': {
-        target: 'http://10.3.5.124:9090',
+        target: 'http://10.3.5.124:3000',
         ws: false,
         changeOrigin: true
       }

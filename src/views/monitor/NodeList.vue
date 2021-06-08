@@ -15,8 +15,6 @@
     <el-col :span="24">
       <div style="margin: 10px">
         <label>Grafana Server : </label><label style="color: #0090ff">{{ Grafana.server }}</label>
-        <label style="margin-left: 15px">UID : </label><label style="color: #0090ff">{{ Grafana.uid }}</label>
-        <label style="margin-left: 15px">Name : </label><label style="color: #0090ff">{{ Grafana.name }}</label>
       </div>
     </el-col>
     <el-col :span="24">
@@ -34,7 +32,20 @@
           @row-click="handleRowClick"
         >
           <el-table-column
-            prop="labels.job"
+            prop="title"
+            label="Title"
+          />
+          <el-table-column
+            prop="uid"
+            label="uid"
+          />
+          <el-table-column
+            prop="url"
+            label="url"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            prop="job"
             label="JOB"
           />
           <el-table-column
@@ -52,7 +63,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="labels.instance"
+            prop="instance"
             label="Node"
             sortable
           />
@@ -77,7 +88,19 @@
           @row-click="handleRowClick"
         >
           <el-table-column
-            prop="labels.job"
+            prop="title"
+            label="Title"
+          />
+          <el-table-column
+            prop="uid"
+            label="uid"
+          />
+          <el-table-column
+            prop="url"
+            label="url"
+          />
+          <el-table-column
+            prop="job"
             label="JOB"
           />
           <el-table-column
@@ -110,27 +133,29 @@
 </template>
 
 <script>
-import { getNodeList } from '@/api/prometheus'
+import { getDatasources, getJobList, getNodeList, getStatus, getTemplatingLabel } from '@/api/prometheus'
 
 export default {
   name: 'NodeList',
   data() {
     return {
       Grafana: {
-        server: '10.3.5.113:3000',
-        uid: '9CWBz0bik',
-        name: 'identity'
+        server: '10.3.5.124:3000'
       },
       nodeList: [],
       droppedNodes: []
     }
   },
   created() {
+    getDatasources().then(res => {
+      console.log(res)
+    })
     this.initNodeData()
   },
   methods: {
     handleRowClick(row) {
-      const params = { server: this.Grafana.server, uid: this.Grafana.uid, name: this.Grafana.name, job: row['labels']['job'], node: row['labels']['instance'] }
+      const pinyin = require('pinyin')
+      const params = { server: this.Grafana.server, uid: row['uid'], name: pinyin(row['title'], { style: pinyin.STYLE_NORMAL }).join('-'), job: row['job'], node: row['instance'] }
       console.log(row)
       console.log(params)
       this.$router.push({
@@ -139,12 +164,40 @@ export default {
       })
     },
     async initNodeData() {
-      const result = await getNodeList()
-      if (result['status'] === 'success') {
-        console.log(result)
-        this.nodeList = result['data']['activeTargets']
-        this.droppedNodes = result['data']['droppedTargets']
+      const finalList = []
+      const results = await getNodeList()
+      const status = await getStatus()
+      for (const result of results) {
+        const nodeResult = await getTemplatingLabel(result['uid'])
+        const dashboard = nodeResult['dashboard']
+        if (dashboard['templating'] && dashboard['templating']['list']) {
+          const templating = dashboard['templating']['list']
+          const templateJobList = templating.filter(t => { return t['name'] === 'job' })
+          if (templateJobList.length > 0) {
+            const query = templateJobList[0]['query'].split('(')[1].split(',')[0]
+            const jobList = await getJobList(query)
+            console.log(jobList)
+            if (jobList['data'] && jobList['data']['result']) {
+              jobList['data']['result'].forEach(m => {
+                const metric = JSON.parse(JSON.stringify((m['metric'])))
+                const temp = JSON.parse(JSON.stringify(result))
+                temp['hostname'] = metric['hostname']
+                temp['instance'] = metric['instance']
+                temp['job'] = metric['job']
+                for (const s of status['data']['activeTargets']) {
+                  if (s['labels']['job'] === temp['job']) {
+                    temp['health'] = s['health']
+                    temp['lastError'] = s['lastError']
+                  }
+                }
+                finalList.push(temp)
+              })
+            }
+          }
+        }
       }
+      console.log(finalList)
+      this.nodeList = finalList
     }
   }
 }
