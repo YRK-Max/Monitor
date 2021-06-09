@@ -59,3 +59,10 @@ export function getRoles() {
     method: 'get'
   })
 }
+
+export function getRolesByUserId(id) {
+  return cis_request({
+    url: `/identity/users/${id}/roles`,
+    method: 'get'
+  })
+}

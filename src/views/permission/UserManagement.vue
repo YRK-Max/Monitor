@@ -152,7 +152,7 @@
 </template>
 
 <script>
-import { createUser, deleteUsersById, getRoles, getUsers } from '@/api/user'
+import { createUser, deleteUsersById, getRoles, getRolesByUserId, getUsers } from '@/api/user'
 
 export default {
   name: 'UserManagement',
@@ -242,9 +242,12 @@ export default {
     handleSelectionChange(val) {
       this.selectedUserList = val
     },
-    handleEdit(row) {
-      console.log(row)
+    async handleEdit(row) {
+      const roles = await getRolesByUserId(row['id'])
       this.userForm = row
+      if (roles && roles['items']) {
+        this.userForm.roleNames = roles['items']
+      }
       this.mode = 'edit'
       this.drawerVisible = true
     },
