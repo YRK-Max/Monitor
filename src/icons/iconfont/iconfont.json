@@ -6,6 +6,41 @@
   "description": "通用图标库",
   "glyphs": [
     {
+      "icon_id": "5262062",
+      "name": "role_icon",
+      "font_class": "role_icon",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "13998417",
+      "name": "configure",
+      "font_class": "set_configure_hov",
+      "unicode": "e688",
+      "unicode_decimal": 59016
+    },
+    {
+      "icon_id": "17575619",
+      "name": "versions",
+      "font_class": "versions",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "8314480",
+      "name": "日志 操作记录",
+      "font_class": "wulianwang-",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "17295862",
+      "name": "process",
+      "font_class": "process",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
       "icon_id": "13479219",
       "name": "状态",
       "font_class": "B",

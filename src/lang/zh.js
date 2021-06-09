@@ -69,7 +69,10 @@ export default {
     Monitor: '监控服务',
     systemManage: '系统管理',
     userManagement: '用户管理',
-    permissionManagement: '权限管理'
+    roleManagement: '角色管理',
+    permissionManagement: '权限管理',
+    configManagement: '系统配置',
+    systemLog: '系统日志'
   },
   navbar: {
     dashboard: '首页',

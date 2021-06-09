@@ -90,7 +90,15 @@ export const constantRoutes = [
         meta: { title: 'profile', icon: 'user', noCache: true }
       }
     ]
-  },
+  }
+]
+
+/**
+ * asyncRoutes
+ * the routes that need to be dynamically loaded based on user roles
+ */
+export const asyncRoutes = [
+  // 404 page must be placed at the end !!!
   {
     path: '/grafana',
     component: Layout,
@@ -121,40 +129,47 @@ export const constantRoutes = [
         path: '/serviceMonitor',
         component: () => import('@/views/monitor/ServiceList'),
         name: 'ServiceList',
-        meta: { title: 'ServiceList', icon: 'yicondowntime', noCache: false },
+        meta: { title: 'ServiceList', icon: 'yiconprocess', noCache: false },
         props: true
       }
     ]
   },
   {
-    path: '/permission',
+    path: '/system',
     component: Layout,
     meta: { title: 'systemManage', icon: 'yiconsetting' },
+    roles: ['admin'],
     children: [
       {
         path: '/userManagement',
-        component: () => import('@/views/permission/UserManagement'),
+        component: () => import('@/views/system/permission/UserManagement'),
         name: 'userManagement',
         meta: { title: 'userManagement', icon: 'el-icon-user', noCache: false },
         props: true
       },
       {
-        path: '/permissionManagement',
-        component: () => import('@/views/permission/PermissionManagement'),
-        name: 'permissionManagement',
-        meta: { title: 'permissionManagement', icon: 'el-icon-lock', noCache: false },
+        path: '/roleManagement',
+        component: () => import('@/views/system/permission/RoleManagement'),
+        name: 'roleManagement',
+        meta: { title: 'roleManagement', icon: 'yiconrole_icon', noCache: false },
+        props: true
+      },
+      {
+        path: '/configManagement',
+        component: () => import('@/views/system/sys-config/ConfigManagement'),
+        name: 'configManagement',
+        meta: { title: 'configManagement', icon: 'yiconset_configure_hov', noCache: false },
+        props: true
+      },
+      {
+        path: '/systemLog',
+        component: () => import('@/views/system/sys-log/LogViewer'),
+        name: 'systemLog',
+        meta: { title: 'systemLog', icon: 'yiconwulianwang-', noCache: false },
         props: true
       }
     ]
-  }
-]
-
-/**
- * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
- */
-export const asyncRoutes = [
-  // 404 page must be placed at the end !!!
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

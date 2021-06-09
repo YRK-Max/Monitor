@@ -69,7 +69,10 @@ export default {
     Monitor: 'Monitor',
     systemManage: 'System Management',
     userManagement: 'User',
-    permissionManagement: 'Permission'
+    roleManagement: 'Role',
+    permissionManagement: 'Permission',
+    configManagement: 'Sys Config',
+    systemLog: 'Sys Log'
   },
   navbar: {
     dashboard: 'Dashboard',

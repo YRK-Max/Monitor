@@ -52,6 +52,14 @@ export function createUser(data) {
   })
 }
 
+export function modifyUserById(id, data) {
+  return cis_request({
+    url: `/identity/users/${id}`,
+    method: 'put',
+    data
+  })
+}
+
 /** -------------------------------角色相关------------------------------- **/
 export function getRoles() {
   return cis_request({
@@ -60,9 +68,24 @@ export function getRoles() {
   })
 }
 
+export function createRole(data) {
+  return cis_request({
+    url: '/identity/roles',
+    method: 'post',
+    data
+  })
+}
+
 export function getRolesByUserId(id) {
   return cis_request({
     url: `/identity/users/${id}/roles`,
     method: 'get'
+  })
+}
+
+export function deleteRolesById(id) {
+  return cis_request({
+    url: `/identity/roles/${id}`,
+    method: 'delete'
   })
 }
