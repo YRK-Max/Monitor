@@ -125,6 +125,27 @@ export const constantRoutes = [
         props: true
       }
     ]
+  },
+  {
+    path: '/permission',
+    component: Layout,
+    meta: { title: 'systemManage', icon: 'yiconsetting' },
+    children: [
+      {
+        path: '/userManagement',
+        component: () => import('@/views/permission/UserManagement'),
+        name: 'userManagement',
+        meta: { title: 'userManagement', icon: 'el-icon-user', noCache: false },
+        props: true
+      },
+      {
+        path: '/permissionManagement',
+        component: () => import('@/views/permission/PermissionManagement'),
+        name: 'permissionManagement',
+        meta: { title: 'permissionManagement', icon: 'el-icon-lock', noCache: false },
+        props: true
+      }
+    ]
   }
 ]
 

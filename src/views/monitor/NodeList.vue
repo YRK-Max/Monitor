@@ -1,7 +1,7 @@
 <template>
   <el-row class="main-row">
     <el-col :span="24">
-      <div class="params-panel">
+      <el-card class="params-panel">
         <el-form inline label-position="left">
           <el-form-item label="IP" label-width="50px">
             <el-input style="width: 250px" />
@@ -10,7 +10,7 @@
             <el-button type="primary">查询</el-button>
           </el-form-item>
         </el-form>
-      </div>
+      </el-card>
     </el-col>
     <el-col :span="24">
       <div style="margin: 10px">
@@ -303,13 +303,16 @@ export default {
 <style lang="scss" scoped>
 .params-panel {
   background: #f7faff;
-  height: 60px;
+  height: 65px;
   margin: 5px;
-  padding: 8px;
   border-radius: 5px;
   display: flex;
   align-content: center;
   border: 1px solid #9cc4ff;
+
+  ::v-deep .el-card__body{
+    padding: 12px;
+  }
 }
 
 .up {

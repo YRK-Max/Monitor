@@ -45,12 +45,12 @@ module.exports = {
           '^/prometheus': '/api' // rewrite path
         }
       },
-      '/grafana': {
-        target: 'http://10.3.5.124:3000',
+      '/cis': {
+        target: 'http://10.3.5.124:44398',
         ws: false,
         changeOrigin: true,
         pathRewrite: {
-          '^/grafana': '/api' // rewrite path
+          '^/cis': '/api' // rewrite path
         }
       }
     }

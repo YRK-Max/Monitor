@@ -66,7 +66,10 @@ export default {
     Grafana: 'Grafana',
     NodeList: 'Node List',
     ServiceList: 'Service List',
-    Monitor: 'Monitor'
+    Monitor: 'Monitor',
+    systemManage: 'System Management',
+    userManagement: 'User',
+    permissionManagement: 'Permission'
   },
   navbar: {
     dashboard: 'Dashboard',

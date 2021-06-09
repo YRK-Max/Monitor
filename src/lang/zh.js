@@ -66,7 +66,10 @@ export default {
     Grafana: '监控面板',
     NodeList: 'Node 列表',
     ServiceList: '服务列表',
-    Monitor: '监控服务'
+    Monitor: '监控服务',
+    systemManage: '系统管理',
+    userManagement: '用户管理',
+    permissionManagement: '权限管理'
   },
   navbar: {
     dashboard: '首页',

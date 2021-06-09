@@ -168,6 +168,11 @@ export default {
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
+              this.$notify({
+                title: '登录成功',
+                message: '欢迎您, ' + this.loginForm.username,
+                type: 'success'
+              })
             })
             .catch(() => {
               this.loading = false

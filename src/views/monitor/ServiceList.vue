@@ -1,7 +1,7 @@
 <template>
   <el-row class="main-row">
     <el-col :span="24">
-      <div class="params-panel">
+      <el-card class="params-panel">
         <el-form inline label-position="left">
           <el-form-item label="IP" label-width="50px">
             <el-input style="width: 250px" />
@@ -10,7 +10,7 @@
             <el-button type="primary">查询</el-button>
           </el-form-item>
         </el-form>
-      </div>
+      </el-card>
     </el-col>
     <el-col :span="24">
       <div style="margin: 10px">
@@ -38,9 +38,10 @@
           <el-table-column
             prop="health"
             label="Status"
+            align="center"
           >
             <template slot-scope="scope">
-              <div style="display: flex; align-content: center">
+              <div style="display: flex; align-content: center; justify-content: center">
                 <i :class="['yicon-common', 'yiconB', scope.row['health']]" />
                 <el-tag :type="scope.row['health'] === 'up'?'success':'danger'" size="small">{{
                   scope.row['health']
@@ -52,20 +53,23 @@
           <el-table-column
             prop="instance"
             label="Instance"
+            align="center"
             sortable
           />
           <el-table-column
             prop="lastError"
             label="Last Error"
+            align="center"
             :show-overflow-tooltip="true"
           />
           <el-table-column
             prop="active_state"
             label="活动状态"
+            align="center"
             :show-overflow-tooltip="true"
           >
             <template slot-scope="scope">
-              <div style="display: flex; align-content: center">
+              <div style="display: flex; align-content: center; justify-content: center">
                 <el-tag :type="scope.row['active_state'] === 'active'?'success':'danger'" size="small">{{
                   scope.row['active_state']
                 }}
@@ -73,9 +77,51 @@
               </div>
             </template>
           </el-table-column>
+          <el-table-column
+            label="Operation"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-button type="primary" icon="el-icon-setting" circle @click="handleManager($event, scope.row)" />
+            </template>
+          </el-table-column>
         </el-table>
       </el-card>
     </el-col>
+    <el-dialog
+      title="操作"
+      :visible.sync="dialogVisible"
+      width="320px"
+      :before-close="handleClose"
+    >
+      <div class="info-container">
+        <div class="info-div">
+          <label>JOB</label><span class="info-span">{{ currentService.job }}</span>
+        </div>
+        <div class="info-div">
+          <label>Status</label>
+          <div style="display: flex; align-content: center; justify-content: center; width: 200px">
+            <i :class="['yicon-common', 'yiconB', currentService['health']]" />
+            <el-tag :type="currentService['health'] === 'up'?'success':'danger'" size="small">{{
+              currentService['health']
+            }}
+            </el-tag>
+          </div>
+        </div>
+        <div class="info-div">
+          <label>Instance</label><span class="info-span">{{ currentService.instance }}</span>
+        </div>
+      </div>
+      <div class="operation-container">
+        <el-popconfirm
+          title="确定停止服务吗？"
+        >
+          <el-button slot="reference" :disabled="currentService['health'] === 'down'" type="danger">停止</el-button>
+        </el-popconfirm>
+        <el-button :disabled="currentService['health'] === 'up'" type="success">启动</el-button>
+        <el-button type="primary">重启</el-button>
+      </div>
+    </el-dialog>
   </el-row>
 </template>
 
@@ -90,7 +136,13 @@ export default {
         server: '10.3.5.124:3000'
       },
       windowsNodeList: [],
-      linuxNodeList: []
+      linuxNodeList: [],
+      dialogVisible: false,
+      currentService: {
+        job: '',
+        health: 'up',
+        instance: ''
+      }
     }
   },
   created() {
@@ -194,6 +246,14 @@ export default {
       }
 
       this.windowsNodeList = windows_list
+    },
+    handleManager(e, row) {
+      e.stopPropagation()
+      this.dialogVisible = true
+      this.currentService = row
+    },
+    handleClose() {
+      this.dialogVisible = false
     }
   }
 }
@@ -202,13 +262,16 @@ export default {
 <style lang="scss" scoped>
 .params-panel {
   background: #f7faff;
-  height: 60px;
+  height: 65px;
   margin: 5px;
-  padding: 8px;
   border-radius: 5px;
   display: flex;
   align-content: center;
   border: 1px solid #9cc4ff;
+
+  ::v-deep .el-card__body{
+    padding: 12px;
+  }
 }
 
 .up {
@@ -219,7 +282,24 @@ export default {
 
 .down {
   margin-right: 10px;
-  font-size: 20px;
   color: #d02828;
+}
+
+.operation-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.info-div {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+
+  .info-span {
+    width: 200px;
+    text-align: center;
+  }
 }
 </style>
