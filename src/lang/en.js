@@ -72,7 +72,10 @@ export default {
     roleManagement: 'Role',
     permissionManagement: 'Permission',
     configManagement: 'Sys Config',
-    systemLog: 'Sys Log'
+    systemLog: 'Sys Log',
+    bcControl: 'BC Control',
+    BCVersionManagement: 'BC Version',
+    BCLogDownload: 'BC Log Download'
   },
   navbar: {
     dashboard: 'Dashboard',

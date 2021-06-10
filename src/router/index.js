@@ -135,10 +135,30 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/bcControl',
+    component: Layout,
+    meta: { title: 'bcControl', icon: 'el-icon-set-up' },
+    children: [
+      {
+        path: '/BCVersionManagement',
+        component: () => import('@/views/bc-control/BCVersionManagement'),
+        name: 'BCVersionManagement',
+        meta: { title: 'BCVersionManagement', icon: 'yiconversions', noCache: false, roles: ['admin'] },
+        props: true
+      },
+      {
+        path: '/BCLogDownload',
+        component: () => import('@/views/bc-control/BCLogDownload'),
+        name: 'BCLogDownload',
+        meta: { title: 'BCLogDownload', icon: 'el-icon-download', noCache: false },
+        props: true
+      }
+    ]
+  },
+  {
     path: '/system',
     component: Layout,
-    meta: { title: 'systemManage', icon: 'yiconsetting' },
-    roles: ['admin'],
+    meta: { title: 'systemManage', icon: 'yiconsetting', roles: ['admin'] },
     children: [
       {
         path: '/userManagement',
