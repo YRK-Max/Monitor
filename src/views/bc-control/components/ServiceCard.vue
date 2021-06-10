@@ -75,6 +75,10 @@ export default {
 }
 .main-card:hover {
   background: #e6f3ff;
+  .logo-image {
+      -webkit-animation: heartbeat 1.5s ease-in-out infinite both;
+      animation: heartbeat 1.5s ease-in-out infinite both;
+  }
 }
 .content {
   display: flex;
