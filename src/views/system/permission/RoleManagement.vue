@@ -95,6 +95,8 @@
                     >
                       <a slot="reference">删除</a>
                     </el-popconfirm>
+                    <el-divider direction="vertical" />
+                    <a>授权</a>
                   </div>
                 </template>
               </el-table-column>

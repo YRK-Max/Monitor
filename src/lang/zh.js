@@ -73,9 +73,9 @@ export default {
     permissionManagement: '权限管理',
     configManagement: '系统配置',
     systemLog: '系统日志',
-    bcControl: '服务管理',
-    BCNewVerFileUpload: '更新文件上传',
-    BCVersionManagement: '服务版本管理',
+    bcControl: '实例管理',
+    BCNewVerFileUpload: '更新包上传',
+    BCVersionManagement: '实例版本管理',
     BCLogDownload: '日志下载'
   },
   navbar: {
