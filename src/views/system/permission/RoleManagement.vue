@@ -27,6 +27,7 @@
           <el-col :span="24">
             <el-table
               ref="UserTable"
+              v-loading="loading"
               :data="displayRoleList"
               :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
               @selection-change="handleSelectionChange"
@@ -117,7 +118,7 @@
         :rules="roleFormRules"
       >
         <el-form-item label="Name" prop="name">
-          <el-input v-model="roleForm.name" style="width: 100%" />
+          <el-input v-model="roleForm.name" :disabled="mode !== 'add'" style="width: 100%" />
         </el-form-item>
         <el-form-item label="isDefault" prop="isDefault">
           <el-switch
@@ -136,7 +137,7 @@
         <el-form-item style="float: right">
           <el-button @click="drawerVisible = false">取消</el-button>
           <el-button v-if="mode==='add'" type="primary" @click="handleAddRoleConfirm">添加</el-button>
-          <el-button v-if="mode==='edit'" type="primary">修改</el-button>
+          <el-button v-if="mode==='edit'" type="primary" @click="handleModifyRoleConfirm">修改</el-button>
         </el-form-item>
       </el-form>
     </el-drawer>
@@ -144,10 +145,11 @@
 </template>
 
 <script>
-import { createRole, deleteRolesById, getRoles } from '@/api/user'
+import { createRole, deleteRolesById, getRoles, modifyRoleByID } from '@/api/user'
+import { deepClone } from '@/utils'
 
 export default {
-  name: 'UserManagement',
+  name: 'RoleManagement',
   data() {
     return {
       isDefault: false,
@@ -156,7 +158,8 @@ export default {
         roleName: ''
       },
       roleForm: {
-        name: ''
+        name: '',
+        concurrencyStamp: ''
       },
       roleFormRules: {
         name: [
@@ -169,7 +172,9 @@ export default {
       roleOptions: [],
       selectedRoleList: [],
       drawerVisible: false,
-      mode: 'add'
+      mode: 'add',
+      currentEditRoleID: '',
+      loading: false
     }
   },
   created() {
@@ -179,30 +184,39 @@ export default {
     initData() {
       this.refreshRoleData()
       this.total = this.roleDatasource.length / 20
-      this.refreshSelectData()
     },
     async refreshRoleData() {
+      this.loading = true
       const res = await getRoles()
       if (res && res['items']) {
         this.roleDatasource = res['items']
         this.displayRoleList = res['items']
       }
+      this.loading = false
     },
     handleSelectionChange(val) {
       this.selectedRoleList = val
     },
     async handleEdit(row) {
-      this.roleForm = row['name']
-      this.isPublic = row['isPublic']
-      this.isDefault = row['isDefault']
-      this.mode = 'edit'
-      this.drawerVisible = true
+      const that = this
+      that.drawerVisible = true
+      that.$nextTick(() => {
+        that.roleForm.name = row['name']
+        that.roleForm.concurrencyStamp = row['concurrencyStamp']
+        that.isPublic = row['isPublic']
+        that.isDefault = row['isDefault']
+        that.mode = 'edit'
+        that.currentEditRoleID = row['id']
+        console.log(row)
+      })
     },
     handleDeleteUser(row) {
       if (row['id']) {
         deleteRolesById(row['id'])
         this.$message.success('删除成功')
-        this.refreshRoleData()
+        setTimeout(() => {
+          this.refreshRoleData()
+        }, 500)
       } else {
         this.$message.error('用户ID为空')
       }
@@ -213,7 +227,9 @@ export default {
           deleteRolesById(role['id'])
         })
         this.$message.success('批量删除成功')
-        this.refreshRoleData()
+        setTimeout(() => {
+          this.refreshRoleData()
+        }, 500)
       } else {
         this.$message.warning('请选择至少一个用户')
       }
@@ -224,16 +240,6 @@ export default {
     handleAddRole() {
       this.mode = 'add'
       this.drawerVisible = true
-      this.roleForm = {
-        userName: '',
-        name: '',
-        surname: '',
-        email: '',
-        phoneNumber: '',
-        lockoutEnabled: true,
-        roleNames: [],
-        password: ''
-      }
       this.resetUserForm()
     },
     handleAddRoleConfirm() {
@@ -245,10 +251,21 @@ export default {
           createRole(this.roleForm).then(() => {
             this.drawerVisible = false
             this.$message.success('创建成功')
+            this.refreshRoleData()
           })
         } else {
           return false
         }
+      })
+    },
+    handleModifyRoleConfirm() {
+      const params = deepClone(this.roleForm)
+      params['isDefault'] = this.isDefault
+      params['isPublic'] = this.isPublic
+      modifyRoleByID(this.currentEditRoleID, params).then(() => {
+        this.$message.success('修改成功')
+        this.drawerVisible = false
+        this.refreshRoleData()
       })
     },
     resetUserForm() {

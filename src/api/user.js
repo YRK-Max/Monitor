@@ -89,3 +89,11 @@ export function deleteRolesById(id) {
     method: 'delete'
   })
 }
+
+export function modifyRoleByID(roleID, data) {
+  return cis_request({
+    url: `/identity/roles/${roleID}`,
+    method: 'put',
+    data
+  })
+}
