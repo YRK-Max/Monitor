@@ -73,9 +73,10 @@ export default {
     permissionManagement: '权限管理',
     configManagement: '系统配置',
     systemLog: '系统日志',
-    bcControl: 'BC 管理',
-    BCVersionManagement: 'BC 版本管理',
-    BCLogDownload: 'BC 日志下载'
+    bcControl: '服务管理',
+    BCNewVerFileUpload: '更新文件上传',
+    BCVersionManagement: '服务版本管理',
+    BCLogDownload: '日志下载'
   },
   navbar: {
     dashboard: '首页',

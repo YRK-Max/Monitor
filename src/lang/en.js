@@ -73,9 +73,10 @@ export default {
     permissionManagement: 'Permission',
     configManagement: 'Sys Config',
     systemLog: 'Sys Log',
-    bcControl: 'BC Control',
-    BCVersionManagement: 'BC Version',
-    BCLogDownload: 'BC Log Download'
+    bcControl: 'Service Control',
+    BCNewVerFileUpload: 'File Upload',
+    BCVersionManagement: 'Version Control',
+    BCLogDownload: 'Log Download'
   },
   navbar: {
     dashboard: 'Dashboard',

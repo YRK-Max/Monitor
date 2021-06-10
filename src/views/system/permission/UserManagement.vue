@@ -295,7 +295,9 @@ export default {
       ]
       this.mode = 'add'
       this.drawerVisible = true
-      this.resetUserForm()
+      this.$nextTick(() => {
+        this.resetUserForm()
+      })
     },
     handleAddUserConfirm() {
       const that = this
