@@ -20,6 +20,7 @@ import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 
+// 自定义图标库
 import './icons/iconfont/iconfont.js'
 import './icons/iconfont/iconfont.css'
 

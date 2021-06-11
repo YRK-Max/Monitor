@@ -1,92 +1,98 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
-      <div class="title-container">
-        <h3 class="title">
-          {{ $t('login.title') }}
-        </h3>
-        <lang-select class="set-language" />
+    <div class="mt-20 title-div">
+      <div :class="[ 'relative', 'ml-10', '-enter-x']">
+        <div style="display: flex; width: 60%; height: 60px;">
+          <img src="@/assets/image/logo.png">
+          <label style="display: inline-block; line-height: 60px; font-size: 30px; margin-left: 10px; color: #f6f6f6">EcoFabb
+            MTS</label>
+        </div>
+        <div class="mt-45">
+          <img style="width: 350px" src="@/assets/svg/login-box-bg.svg" alt="">
+        </div>
+        <div class="mt-10 font-medium text-white">
+          <span class="mt-4 text-3xl inline-block">智慧工厂监控运维系统</span>
+        </div>
+        <div class="mt-5 text-md text-white font-normal">
+          面向制造企业车间各类服务进程监控和管理的辅助类应用程序
+        </div>
       </div>
+    </div>
+    <div class="login-form-div">
+      <el-form
+        ref="loginForm"
+        class="login-form"
+        :model="loginForm"
+        :rules="loginRules"
+        autocomplete="on"
+        label-position="left"
+      >
+        <div class="title-container enter-x">
+          <h2 class="font-bold text-2xl xl:text-3xl text-center xl:text-left mb-6">
+            {{ $t('login.title') }}
+          </h2>
+          <lang-select class="set-language" />
+        </div>
 
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          :placeholder="$t('login.username')"
-          name="username"
-          type="text"
-          tabindex="1"
-          autocomplete="on"
-        />
-      </el-form-item>
-
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-        <el-form-item prop="password">
+        <el-form-item prop="username" class="enter-x-7">
           <span class="svg-container">
-            <svg-icon icon-class="password" />
+            <svg-icon icon-class="user" />
           </span>
           <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            :placeholder="$t('login.password')"
-            name="password"
-            tabindex="2"
+            ref="username"
+            v-model="loginForm.username"
+            :placeholder="$t('login.username')"
+            name="username"
+            type="text"
+            tabindex="1"
             autocomplete="on"
-            @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin"
           />
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
         </el-form-item>
-      </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
-        {{ $t('login.logIn') }}
-      </el-button>
+        <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+          <el-form-item prop="password" class="enter-x-8">
+            <span class="svg-container">
+              <svg-icon icon-class="password" />
+            </span>
+            <el-input
+              :key="passwordType"
+              ref="password"
+              v-model="loginForm.password"
+              :type="passwordType"
+              :placeholder="$t('login.password')"
+              name="password"
+              tabindex="2"
+              autocomplete="on"
+              @keyup.native="checkCapslock"
+              @blur="capsTooltip = false"
+              @keyup.enter.native="handleLogin"
+            />
+            <span class="show-pwd" @click="showPwd">
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            </span>
+          </el-form-item>
+        </el-tooltip>
 
-      <!--      <div style="position:relative">-->
-      <!--        <div class="tips">-->
-      <!--          <span>{{ $t('login.username') }} : admin</span>-->
-      <!--          <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>-->
-      <!--        </div>-->
-      <!--        <div class="tips">-->
-      <!--          <span style="margin-right:18px;">-->
-      <!--            {{ $t('login.username') }} : editor-->
-      <!--          </span>-->
-      <!--          <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>-->
-      <!--        </div>-->
-
-      <!--        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">-->
-      <!--          {{ $t('login.thirdparty') }}-->
-      <!--        </el-button>-->
-      <!--      </div>-->
-    </el-form>
-
-    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog">
-      {{ $t('login.thirdpartyTips') }}
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog>
+        <el-button
+          class="enter-x-9"
+          :loading="loading"
+          type="primary"
+          style="width:100%;margin-bottom:30px;"
+          @click.native.prevent="handleLogin"
+        >
+          {{ $t('login.logIn') }}
+        </el-button>
+      </el-form>
+    </div>
   </div>
 </template>
 
 <script>
 import LangSelect from '@/components/LangSelect'
-import SocialSign from './components/SocialSignin'
 
 export default {
   name: 'Login',
-  components: { LangSelect, SocialSign },
+  components: { LangSelect },
   data() {
     const validateUsername = (rule, value, callback) => {
       callback()
@@ -110,7 +116,6 @@ export default {
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
-      showDialog: false,
       redirect: undefined,
       otherQuery: {}
     }
@@ -186,24 +191,6 @@ export default {
         return acc
       }, {})
     }
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
   }
 }
 </script>
@@ -212,9 +199,9 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#fff;
-$cursor: #fff;
+$bg: aliceblue;
+$light_gray: #bebebe;
+$cursor: #5f5f5f;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
@@ -256,23 +243,75 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #ffffff;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   min-height: 100%;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
+  display: flex;
+  justify-content: space-around;
 
-  .login-form {
-    position: relative;
-    width: 520px;
-    max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
-    overflow: hidden;
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin-left: -48%;
+    background-image: url('~@/assets/svg/login-bg.svg');
+    background-position: 100%;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+    content: '';
+    @media (max-width: 1200px) {
+      display: none;
+    }
+  }
+
+  .title-div {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    @media (max-width: 1200px) {
+      display: none;
+    }
+  }
+
+  .login-form-div {
+    padding: 1rem;
+    background: white;
+    flex-grow: 3;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-top: 16%;
+
+    .login-form {
+      position: fixed;
+      width: 400px;
+
+      ::v-deep .el-form-item__content{
+        background: aliceblue;
+      }
+
+      @media (max-width: 1200px) {
+        width: 90%;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      position: absolute;
+      margin: auto;
+      left: 10px;
+      right: 10px;
+      top: 100px;
+      bottom: 100px;
+      border-radius: 8px;
+    }
   }
 
   .tips {
@@ -307,7 +346,7 @@ $light_gray:#eee;
     }
 
     .set-language {
-      color: #fff;
+      color: #545454;
       position: absolute;
       top: 3px;
       font-size: 18px;
@@ -319,7 +358,7 @@ $light_gray:#eee;
   .show-pwd {
     position: absolute;
     right: 10px;
-    top: 7px;
+    top: 14px;
     font-size: 16px;
     color: $dark_gray;
     cursor: pointer;
@@ -337,5 +376,70 @@ $light_gray:#eee;
       display: none;
     }
   }
+
+  @media (max-width: 1200px) {
+    background: #1f233d;
+  }
+}
+
+.enter-x {
+  -webkit-animation: slide-in-right 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: slide-in-right 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.enter-x-7 {
+  -webkit-animation: slide-in-right 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: slide-in-right 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.enter-x-8 {
+  -webkit-animation: slide-in-right 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: slide-in-right 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.enter-x-9 {
+  -webkit-animation: slide-in-right 0.9s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: slide-in-right 0.9s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.-enter-x {
+  -webkit-animation: slide-in-left 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  animation: slide-in-left 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.mt-20 {
+  margin-top: 100px;
+}
+
+.mt-45 {
+  margin-top: 180px;
+}
+
+.mt-5 {
+  margin-top: 15px;
+}
+
+.mt-10 {
+  margin-top: 30px;
+}
+
+.mt-50 {
+  margin-top: 150px;
+}
+
+.ml-10 {
+  margin-left: 10px;
+}
+
+.text-white {
+  color: white;
+}
+
+.font-medium {
+  font-size: 30px;
+}
+
+.font-normal {
+  font-size: 16px;
 }
 </style>
