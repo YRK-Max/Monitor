@@ -2,9 +2,8 @@
   <el-row :gutter="5" class="main-row">
     <el-col :span="8">
       <el-card
-        style="height: 870px"
         header="服务类型列表"
-        :body-style="{padding: '6px', height: '810px'}"
+        :body-style="{ height: height - 57 + 'px', padding: '6px', overflowY: 'auto', overflowX: 'hidden'}"
       >
         <service-card
           v-for="service in services"
@@ -21,7 +20,7 @@
     <el-col :span="16">
       <el-row>
         <el-col :span="24">
-          <el-card style="height: 465px" :header="'版本列表 -- ' + currentService">
+          <el-card :header="'版本列表 -- ' + currentService">
             <el-row>
               <el-col :span="24">
                 <el-table
@@ -29,6 +28,7 @@
                   :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
                   :data="displayVersionList"
                   :default-sort="{prop: 'uploadTime', order: 'descending'}"
+                  :height="height - 486"
                 >
                   <el-table-column
                     prop="folderName"
@@ -60,7 +60,7 @@
           </el-card>
         </el-col>
         <el-col :span="24">
-          <el-card style="height: 393px" :header="'程序上传 -- ' + currentService">
+          <el-card :style="{height: '380px'}" :header="'程序上传 -- ' + currentService">
             <el-row>
               <el-col :span="24">
                 <el-form
@@ -137,6 +137,11 @@ export default {
       currentService: ''
     }
   },
+  computed: {
+    height() {
+      return (this.$store.getters.body_height - 100) > 800 ? (this.$store.getters.body_height - 100) : 800
+    }
+  },
   mounted() {
     if (this.versionList) {
       this.currentService = Object.keys(this.versionList)[0]
@@ -156,7 +161,7 @@ export default {
 .main-row {
   padding: 5px 5px 0 5px;
   ::v-deep .el-col {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 }
 .upload-new {

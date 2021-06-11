@@ -2,9 +2,8 @@
   <el-row :gutter="5" class="main-row">
     <el-col :span="8">
       <el-card
-        style="height: 870px"
         header="服务类型列表"
-        :body-style="{padding: '6px', height: '810px'}"
+        :body-style="{padding: '6px', height: height + 'px', overflowY: 'auto', overflowX: 'hidden'}"
       >
         <service-card
           v-for="service in services"
@@ -47,7 +46,7 @@
           </el-card>
         </el-col>
         <el-col :span="24">
-          <el-card style="height: 780px" :header="'服务实例列表 -- ' + currentService">
+          <el-card :header="'服务实例列表 -- ' + currentService">
             <el-row>
               <el-col :span="24">
                 <el-table
@@ -55,6 +54,7 @@
                   :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
                   :data="displayInstanceList"
                   :default-sort="{prop: 'uploadTime', order: 'descending'}"
+                  :height="height - 128"
                 >
                   <el-table-column
                     type="selection"
@@ -133,6 +133,11 @@ export default {
       currentService: ''
     }
   },
+  computed: {
+    height() {
+      return this.$store.getters.body_height - 160
+    }
+  },
   mounted() {
     if (this.versionList) {
       this.currentService = Object.keys(this.versionList)[0]
@@ -156,7 +161,7 @@ export default {
   margin-top: 5px;
   padding: 0 5px 0 5px;
   ::v-deep .el-col {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 }
 .upload-new {

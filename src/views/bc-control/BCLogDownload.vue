@@ -29,7 +29,7 @@
     <el-col :span="8">
       <el-card
         header="服务实例列表"
-        :body-style="{ height: '730px', padding: '5px' }"
+        :body-style="{ height: height + 'px', padding: '5px', overflowY: 'auto', overflowX: 'hidden' }"
       >
         <service-card
           v-for="instance in serviceInstanceList"
@@ -47,7 +47,7 @@
     <el-col :span="16">
       <el-card
         header="日志文件目录"
-        :body-style="{ height: '730px', padding: '5px' }"
+        :body-style="{ padding: '5px' }"
       >
         <div style="display: flex; justify-content: space-between; margin-bottom: 10px">
           <el-button @click="handleBack">上一级</el-button>
@@ -60,7 +60,7 @@
           <el-button type="primary">打包下载</el-button>
         </div>
         <el-table
-          :height="675"
+          :height="height - 55"
           :data="displayFileList"
           @row-click="handleRowClick"
         >
@@ -71,7 +71,14 @@
           <el-table-column
             prop="fileName"
             label="File Name"
-          />
+          >
+            <template slot-scope="scope">
+              <div>
+                <i :class="scope.row['type']==='folder'?'el-icon-folder':'el-icon-document'" />
+                <label style="margin-left: 10px">{{ scope.row['fileName'] }}</label>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="dateModified"
             label="Date Modified"
@@ -113,6 +120,11 @@ export default {
       ],
       displayFileList: [],
       fileList: []
+    }
+  },
+  computed: {
+    height() {
+      return this.$store.getters.body_height - 235
     }
   },
   mounted() {
@@ -208,7 +220,7 @@ export default {
     margin-bottom: 5px;
   }
   ::v-deep .el-col {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 }
 </style>
