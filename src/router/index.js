@@ -100,69 +100,6 @@ export const constantRoutes = [
 export const asyncRoutes = [
   // 404 page must be placed at the end !!!
   {
-    path: '/grafana',
-    component: Layout,
-    children: [
-      {
-        path: 'index/:url',
-        component: () => import('@/components/GrafanaPage/index'),
-        name: 'Grafana',
-        hidden: true,
-        meta: { title: 'Grafana', icon: 'yicongrafana', noCache: false },
-        props: true
-      }
-    ]
-  },
-  {
-    path: '/manager',
-    component: Layout,
-    meta: { title: 'Monitor', icon: 'yicongrafana' },
-    children: [
-      {
-        path: '/monitor',
-        component: () => import('@/views/monitor/NodeList'),
-        name: 'NodeList',
-        meta: { title: 'NodeList', icon: 'yiconprometheusprometheusjiankongfuwu', noCache: false },
-        props: true
-      },
-      {
-        path: '/serviceMonitor',
-        component: () => import('@/views/monitor/ServiceList'),
-        name: 'ServiceList',
-        meta: { title: 'ServiceList', icon: 'yiconprocess', noCache: false },
-        props: true
-      }
-    ]
-  },
-  {
-    path: '/bcControl',
-    component: Layout,
-    meta: { title: 'bcControl', icon: 'el-icon-set-up' },
-    children: [
-      {
-        path: '/BCNewVerFileUpload',
-        component: () => import('@/views/bc-control/BCNewVerFileUpload'),
-        name: 'BCNewVerFileUpload',
-        meta: { title: 'BCNewVerFileUpload', icon: 'el-icon-upload', noCache: false, roles: ['admin'] },
-        props: true
-      },
-      {
-        path: '/BCVersionManagement',
-        component: () => import('@/views/bc-control/BCVersionManagement'),
-        name: 'BCVersionManagement',
-        meta: { title: 'BCVersionManagement', icon: 'yiconversions', noCache: false, roles: ['admin'] },
-        props: true
-      },
-      {
-        path: '/BCLogDownload',
-        component: () => import('@/views/bc-control/BCLogDownload'),
-        name: 'BCLogDownload',
-        meta: { title: 'BCLogDownload', icon: 'el-icon-download', noCache: false },
-        props: true
-      }
-    ]
-  },
-  {
     path: '/system',
     component: Layout,
     meta: { title: 'systemManage', icon: 'yiconsetting', roles: ['admin'] },
@@ -179,20 +116,6 @@ export const asyncRoutes = [
         component: () => import('@/views/system/permission/RoleManagement'),
         name: 'roleManagement',
         meta: { title: 'roleManagement', icon: 'yiconrole_icon', noCache: false },
-        props: true
-      },
-      {
-        path: '/configManagement',
-        component: () => import('@/views/system/sys-config/ConfigManagement'),
-        name: 'configManagement',
-        meta: { title: 'configManagement', icon: 'yiconset_configure_hov', noCache: false },
-        props: true
-      },
-      {
-        path: '/systemLog',
-        component: () => import('@/views/system/sys-log/LogViewer'),
-        name: 'systemLog',
-        meta: { title: 'systemLog', icon: 'yiconwulianwang-', noCache: false },
         props: true
       }
     ]
