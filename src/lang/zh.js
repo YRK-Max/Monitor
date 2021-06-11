@@ -62,7 +62,21 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: '国际化',
     externalLink: '外链',
-    profile: '个人中心'
+    profile: '个人中心',
+    Grafana: '监控面板',
+    NodeList: 'Node 列表',
+    ServiceList: '服务列表',
+    Monitor: '监控服务',
+    systemManage: '系统管理',
+    userManagement: '用户管理',
+    roleManagement: '角色管理',
+    permissionManagement: '权限管理',
+    configManagement: '系统配置',
+    systemLog: '系统日志',
+    bcControl: '实例管理',
+    BCNewVerFileUpload: '更新包上传',
+    BCVersionManagement: '实例版本管理',
+    BCLogDownload: '日志下载'
   },
   navbar: {
     dashboard: '首页',

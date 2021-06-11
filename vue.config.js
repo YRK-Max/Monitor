@@ -6,7 +6,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'vue Element Admin' // page title
+const name = defaultSettings.title || 'Monitor System' // page title
 
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
@@ -36,6 +36,22 @@ module.exports = {
         target: 'http://10.3.5.124:44369',
         ws: false,
         changeOrigin: true
+      },
+      '/prometheus': {
+        target: 'http://10.3.5.124:9090',
+        ws: false,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/prometheus': '/api' // rewrite path
+        }
+      },
+      '/cis': {
+        target: 'http://10.3.5.124:44398',
+        ws: false,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/cis': '/api' // rewrite path
+        }
       }
     }
   },

@@ -62,7 +62,21 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: 'I18n',
     externalLink: 'External Link',
-    profile: 'Profile'
+    profile: 'Profile',
+    Grafana: 'Grafana',
+    NodeList: 'Node List',
+    ServiceList: 'Service List',
+    Monitor: 'Monitor',
+    systemManage: 'System Management',
+    userManagement: 'User',
+    roleManagement: 'Role',
+    permissionManagement: 'Permission',
+    configManagement: 'Sys Config',
+    systemLog: 'Sys Log',
+    bcControl: 'Service Control',
+    BCNewVerFileUpload: 'File Upload',
+    BCVersionManagement: 'Version Control',
+    BCLogDownload: 'Log Download'
   },
   navbar: {
     dashboard: 'Dashboard',

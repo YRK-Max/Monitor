@@ -52,22 +52,22 @@
         {{ $t('login.logIn') }}
       </el-button>
 
-      <div style="position:relative">
-        <div class="tips">
-          <span>{{ $t('login.username') }} : admin</span>
-          <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
-        </div>
-        <div class="tips">
-          <span style="margin-right:18px;">
-            {{ $t('login.username') }} : editor
-          </span>
-          <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
-        </div>
+      <!--      <div style="position:relative">-->
+      <!--        <div class="tips">-->
+      <!--          <span>{{ $t('login.username') }} : admin</span>-->
+      <!--          <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>-->
+      <!--        </div>-->
+      <!--        <div class="tips">-->
+      <!--          <span style="margin-right:18px;">-->
+      <!--            {{ $t('login.username') }} : editor-->
+      <!--          </span>-->
+      <!--          <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>-->
+      <!--        </div>-->
 
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-          {{ $t('login.thirdparty') }}
-        </el-button>
-      </div>
+      <!--        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">-->
+      <!--          {{ $t('login.thirdparty') }}-->
+      <!--        </el-button>-->
+      <!--      </div>-->
     </el-form>
 
     <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog">
@@ -81,7 +81,6 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './components/SocialSignin'
 
@@ -90,11 +89,7 @@ export default {
   components: { LangSelect, SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
+      callback()
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
@@ -105,8 +100,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: 'Sineva123~'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -168,6 +163,11 @@ export default {
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
+              this.$notify({
+                title: '登录成功',
+                message: '欢迎您, ' + this.loginForm.username,
+                type: 'success'
+              })
             })
             .catch(() => {
               this.loading = false

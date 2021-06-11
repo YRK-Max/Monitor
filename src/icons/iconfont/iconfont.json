@@ -1,0 +1,156 @@
+{
+  "id": "2583905",
+  "name": "common-icon",
+  "font_family": "yicon-common",
+  "css_prefix_text": "yicon",
+  "description": "通用图标库",
+  "glyphs": [
+    {
+      "icon_id": "5262062",
+      "name": "role_icon",
+      "font_class": "role_icon",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "13998417",
+      "name": "configure",
+      "font_class": "set_configure_hov",
+      "unicode": "e688",
+      "unicode_decimal": 59016
+    },
+    {
+      "icon_id": "17575619",
+      "name": "versions",
+      "font_class": "versions",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "8314480",
+      "name": "日志 操作记录",
+      "font_class": "wulianwang-",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "17295862",
+      "name": "process",
+      "font_class": "process",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "13479219",
+      "name": "状态",
+      "font_class": "B",
+      "unicode": "e70a",
+      "unicode_decimal": 59146
+    },
+    {
+      "icon_id": "2959568",
+      "name": "宕机",
+      "font_class": "downtime",
+      "unicode": "e79a",
+      "unicode_decimal": 59290
+    },
+    {
+      "icon_id": "17530354",
+      "name": "prometheus prometheus监控服务",
+      "font_class": "prometheusprometheusjiankongfuwu",
+      "unicode": "e757",
+      "unicode_decimal": 59223
+    },
+    {
+      "icon_id": "15378422",
+      "name": "grafana",
+      "font_class": "grafana",
+      "unicode": "ebb0",
+      "unicode_decimal": 60336
+    },
+    {
+      "icon_id": "19657959",
+      "name": "屏幕_全屏",
+      "font_class": "fullScreen",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "1207845",
+      "name": "setting",
+      "font_class": "setting",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
+      "icon_id": "6517457",
+      "name": "文件-请假单",
+      "font_class": "wj-qjd",
+      "unicode": "e70e",
+      "unicode_decimal": 59150
+    },
+    {
+      "icon_id": "11686858",
+      "name": "operation",
+      "font_class": "operation",
+      "unicode": "e681",
+      "unicode_decimal": 59009
+    },
+    {
+      "icon_id": "21159370",
+      "name": "补卡",
+      "font_class": "buka",
+      "unicode": "e6ca",
+      "unicode_decimal": 59082
+    },
+    {
+      "icon_id": "1263383",
+      "name": "加班",
+      "font_class": "jiaban",
+      "unicode": "e64c",
+      "unicode_decimal": 58956
+    },
+    {
+      "icon_id": "1471601",
+      "name": "material",
+      "font_class": "material",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "3876471",
+      "name": "mysql",
+      "font_class": "mysql",
+      "unicode": "e667",
+      "unicode_decimal": 58983
+    },
+    {
+      "icon_id": "10718149",
+      "name": "品质保证 Quality",
+      "font_class": "pinzhibaozhengQuality",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    },
+    {
+      "icon_id": "16098117",
+      "name": "6-Report File",
+      "font_class": "6-ReportFile",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "5700809",
+      "name": "excel",
+      "font_class": "excel",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "16880997",
+      "name": "language",
+      "font_class": "language",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    }
+  ]
+}
