@@ -35,6 +35,7 @@ export default {
       if (!document.hidden) {
         const isMobile = this.$_isMobile()
         store.dispatch('app/toggleDevice', isMobile ? 'mobile' : 'desktop')
+        store.dispatch('app/setHeight', document.body.clientHeight)
 
         if (isMobile) {
           store.dispatch('app/closeSideBar', { withoutAnimation: true })

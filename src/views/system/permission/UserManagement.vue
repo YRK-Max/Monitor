@@ -27,6 +27,7 @@
           ref="UserTable"
           v-loading="loading"
           :data="displayList"
+          :height="height"
           @selection-change="handleSelectionChange"
         >
           <el-table-column
@@ -202,6 +203,11 @@ export default {
       drawerVisible: false,
       mode: 'add',
       loading: false
+    }
+  },
+  computed: {
+    height() {
+      return this.$store.getters.body_height - 350
     }
   },
   created() {
