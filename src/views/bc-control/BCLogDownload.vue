@@ -40,6 +40,7 @@
           :description="instance.description"
           :title="instance.title"
           :os="instance.os"
+          @click="handleServiceCardClick"
         />
       </el-card>
     </el-col>
@@ -53,7 +54,7 @@
           <div style="flex-grow: 1; background: #fff5eb; padding: 10px; border-radius: 5px; margin: 0 10px 0 10px">
             <el-breadcrumb separator="/">
               <el-breadcrumb-item>root</el-breadcrumb-item>
-              <el-breadcrumb-item v-for="path in pathList" :key="path">{{ path }}</el-breadcrumb-item>
+              <el-breadcrumb-item v-for="path in pathList" :key="path['index']">{{ path['fileName'] }}</el-breadcrumb-item>
             </el-breadcrumb>
           </div>
           <el-button type="primary">打包下载</el-button>
@@ -91,6 +92,7 @@
 
 <script>
 import ServiceCard from '@/views/bc-control/components/ServiceCard'
+import { deepClone } from '@/utils'
 export default {
   name: 'BCLogDownload',
   components: { ServiceCard },
@@ -110,30 +112,90 @@ export default {
         { hostname: '10.3.5.135:2020', description: 'LINE1#CUT1', title: 'CIS SYSTEM', os: 'Windows' }
       ],
       displayFileList: [],
-      fileList: [
-        { fileName: '202105245658', dateModified: '2021-05-24 12:45:12', type: 'File folder', size: '',
-          children: [
-            { fileName: '202105245658', dateModified: '2021-05-24 12:45:12', type: 'log', size: '' },
-            { fileName: '202105284568', dateModified: '2021-05-24 12:45:12', type: 'log', size: '' },
-            { fileName: '202106102546', dateModified: '2021-05-24 12:45:12', type: 'log', size: '' }
-          ]
-        }
-      ]
+      fileList: []
     }
   },
   mounted() {
-    this.displayFileList = this.fileList
+    if (this.serviceInstanceList && this.serviceInstanceList[0]) {
+      this.requestFileList(this.serviceInstanceList[0]['hostname'])
+    }
   },
   methods: {
     handleRowClick(row) {
-      this.pathList.push(row.fileName)
-      this.displayFileList = this.fileList.filter(file => { return file.fileName === row.fileName })[0].children
+      if (row['type'] === 'folder') {
+        this.pathList.push({ index: this.pathList.length, fileName: row.fileName })
+        this.displayFileList = this.getChildFileList()
+      }
+    },
+    handleServiceCardClick(data) {
+      this.requestFileList(data)
+    },
+    requestFileList(data) {
+      this.pathList = []
+      // 模拟数据请求
+      setTimeout(() => {
+        if (data === '10.3.5.168:2020') {
+          this.fileList = [
+            {
+              fileName: '202105245658', dateModified: '2021-05-24 12:45:12', type: 'folder', size: '',
+              children: [
+                {
+                  fileName: '202105245658', dateModified: '2021-05-24 12:45:12', type: 'folder', size: '',
+                  children: [
+                    { fileName: '202105284568', dateModified: '2021-05-24 12:45:12', type: 'log', size: '102k' },
+                    { fileName: '202106102546', dateModified: '2021-05-24 12:45:12', type: 'log', size: '200k' }
+                  ]
+                },
+                { fileName: '202105284568', dateModified: '2021-05-24 12:45:12', type: 'log', size: '2k' },
+                { fileName: '202106102546', dateModified: '2021-05-24 12:45:12', type: 'log', size: '856k' }
+              ]
+            }
+          ]
+        } else if (data === '10.3.5.113:8080') {
+          this.fileList = [
+            {
+              fileName: '202105245658', dateModified: '2021-05-24 12:45:12', type: 'folder', size: '',
+              children: [
+                {
+                  fileName: '202105245658', dateModified: '2021-05-24 12:45:12', type: 'folder', size: '',
+                  children: [
+                    { fileName: '202105284568', dateModified: '2021-05-24 12:45:12', type: 'log', size: '102k' },
+                    { fileName: '202106102546', dateModified: '2021-05-24 12:45:12', type: 'log', size: '200k' }
+                  ]
+                },
+                { fileName: '202105284568', dateModified: '2021-05-24 12:45:12', type: 'log', size: '2k' },
+                { fileName: '202106102546', dateModified: '2021-05-24 12:45:12', type: 'log', size: '856k' }
+              ]
+            },
+            {
+              fileName: '202106115658', dateModified: '2021-05-24 12:45:12', type: 'folder', size: '',
+              children: [
+                {
+                  fileName: '202105245658', dateModified: '2021-05-24 12:45:12', type: 'folder', size: '',
+                  children: []
+                },
+                { fileName: '202105284568', dateModified: '2021-05-24 12:45:12', type: 'log', size: '2k' },
+                { fileName: '202106102546', dateModified: '2021-05-24 12:45:12', type: 'log', size: '856k' }
+              ]
+            }
+          ]
+        } else { this.fileList = [] }
+        this.displayFileList = this.getChildFileList()
+      }, 100)
     },
     handleBack() {
       this.pathList.pop()
-      if (this.pathList.length === 0) {
-        this.displayFileList = this.fileList
-      }
+      this.displayFileList = this.getChildFileList()
+    },
+    getChildFileList() {
+      let result = deepClone(this.fileList)
+      this.pathList.forEach(path => {
+        const currentFolder = result.filter(list => { return list['fileName'] === path['fileName'] })
+        if (currentFolder[0] && currentFolder['0']['children']) {
+          result = currentFolder[0]['children']
+        }
+      })
+      return result
     }
   }
 }

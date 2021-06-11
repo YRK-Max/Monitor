@@ -62,7 +62,11 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$emit('click', this.serviceName)
+      if (this.type === 'service') {
+        this.$emit('click', this.serviceName)
+      } else if (this.type === 'instance') {
+        this.$emit('click', this.hostname)
+      }
     }
   }
 }
