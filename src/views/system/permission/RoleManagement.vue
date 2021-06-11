@@ -30,6 +30,7 @@
               v-loading="loading"
               :data="displayRoleList"
               :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
+              :height="height"
               @selection-change="handleSelectionChange"
             >
               <el-table-column
@@ -177,6 +178,11 @@ export default {
       mode: 'add',
       currentEditRoleID: '',
       loading: false
+    }
+  },
+  computed: {
+    height() {
+      return this.$store.getters.body_height - 320
     }
   },
   created() {

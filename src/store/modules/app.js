@@ -8,7 +8,8 @@ const state = {
   },
   device: 'desktop',
   language: getLanguage(),
-  size: Cookies.get('size') || 'medium'
+  size: Cookies.get('size') || 'medium',
+  bodyHeight: document.body.clientHeight
 }
 
 const mutations = {
@@ -36,6 +37,9 @@ const mutations = {
   SET_SIZE: (state, size) => {
     state.size = size
     Cookies.set('size', size)
+  },
+  SET_HEIGHT: (state, height) => {
+    state.bodyHeight = height
   }
 }
 
@@ -54,6 +58,9 @@ const actions = {
   },
   setSize({ commit }, size) {
     commit('SET_SIZE', size)
+  },
+  setHeight({ commit }, height) {
+    commit('SET_HEIGHT', height)
   }
 }
 
