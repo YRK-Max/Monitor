@@ -57,7 +57,8 @@
               <el-breadcrumb-item v-for="path in pathList" :key="path['index']">{{ path['fileName'] }}</el-breadcrumb-item>
             </el-breadcrumb>
           </div>
-          <el-button type="primary">打包下载</el-button>
+          <el-button type="primary">打包</el-button>
+          <el-button><a href="javascript: void(0)">下载</a></el-button>
         </div>
         <el-table
           :height="height - 55"

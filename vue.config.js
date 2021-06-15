@@ -42,7 +42,7 @@ module.exports = {
         ws: false,
         changeOrigin: true,
         pathRewrite: {
-          '^/prometheus': '/api' // rewrite path
+          '^/prometheus': '/api/v1' // rewrite path
         }
       },
       '/cis': {
