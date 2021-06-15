@@ -1,5 +1,5 @@
 <template>
-  <iframe width="100%" height="888px" :src="target" :frameborder="0" />
+  <iframe width="100%" :height="height + 'px'" :src="target" :frameborder="0" />
 </template>
 
 <script>
@@ -19,6 +19,9 @@ export default {
   computed: {
     target() {
       return this.url
+    },
+    height() {
+      return this.$store.getters.body_height - 88
     }
   }
 }
