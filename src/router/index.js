@@ -102,7 +102,7 @@ export const asyncRoutes = [
   {
     path: '/system',
     component: Layout,
-    meta: { title: 'systemManage', icon: 'yiconsetting', roles: ['admin'] },
+    meta: { title: 'systemManage', icon: 'el-icon-setting', roles: ['admin'] },
     children: [
       {
         path: '/userManagement',
@@ -117,6 +117,25 @@ export const asyncRoutes = [
         name: 'roleManagement',
         meta: { title: 'roleManagement', icon: 'yiconrole_icon', noCache: false },
         props: true
+      }
+    ]
+  },
+  {
+    path: '/notification',
+    component: Layout,
+    meta: { title: 'notification', icon: 'el-icon-chat-line-round', roles: ['admin'] },
+    children: [
+      {
+        path: '/alarmList',
+        component: () => import('@/views/notification/alarm/AlarmList'),
+        name: 'alarmList',
+        meta: { title: 'AlarmList', icon: 'el-icon-bell', noCache: false }
+      },
+      {
+        path: '/AlarmSetting',
+        component: () => import('@/views/notification/alarm/AlarmSetting'),
+        name: 'AlarmSetting',
+        meta: { title: 'AlarmSetting', icon: 'el-icon-notebook-1', noCache: false }
       }
     ]
   },
