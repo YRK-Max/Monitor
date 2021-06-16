@@ -12,6 +12,8 @@
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
+        <notification id="notification" class="right-menu-item hover-effect" />
+
         <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
@@ -62,9 +64,11 @@ import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
 import Search from '@/components/HeaderSearch'
+import Notification from '@/components/Notification'
 
 export default {
   components: {
+    Notification,
     Breadcrumb,
     Hamburger,
     ErrorLog,
