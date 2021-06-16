@@ -76,7 +76,10 @@ export default {
     bcControl: 'Service Control',
     BCNewVerFileUpload: 'File Upload',
     BCVersionManagement: 'Version Control',
-    BCLogDownload: 'Log Download'
+    BCLogDownload: 'Log Download',
+    notification: 'Notification',
+    AlarmList: 'Alarm List',
+    AlarmSetting: 'Alarm Setting'
   },
   navbar: {
     dashboard: 'Dashboard',

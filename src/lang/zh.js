@@ -76,7 +76,10 @@ export default {
     bcControl: '实例管理',
     BCNewVerFileUpload: '更新包上传',
     BCVersionManagement: '实例版本管理',
-    BCLogDownload: '日志下载'
+    BCLogDownload: '日志下载',
+    notification: '通知管理',
+    AlarmList: '报警历史',
+    AlarmSetting: '报警设置'
   },
   navbar: {
     dashboard: '首页',
