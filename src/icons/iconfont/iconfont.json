@@ -6,6 +6,20 @@
   "description": "通用图标库",
   "glyphs": [
     {
+      "icon_id": "17575446",
+      "name": "bell",
+      "font_class": "bell",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "19703280",
+      "name": "未知文件",
+      "font_class": "file-unknown",
+      "unicode": "ebb5",
+      "unicode_decimal": 60341
+    },
+    {
       "icon_id": "5262062",
       "name": "role_icon",
       "font_class": "role_icon",
