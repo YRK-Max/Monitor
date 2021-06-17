@@ -79,7 +79,12 @@ export default {
     BCLogDownload: 'Log Download',
     notification: 'Notification',
     AlarmList: 'Alarm List',
-    AlarmSetting: 'Alarm Setting'
+    AlarmSetting: 'Alarm Setting',
+    maintenance: 'Maintenance',
+    maintenancePlan: 'Maintenance Plan',
+    mainPlanEdit: 'PM Plan Edit',
+    achievementRate: 'Achievement Rate',
+    consumableManage: 'Consumable Manage'
   },
   navbar: {
     dashboard: 'Dashboard',

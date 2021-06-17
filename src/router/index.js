@@ -107,8 +107,8 @@ export const asyncRoutes = [
         path: 'index/:url',
         component: () => import('@/modules/monitor/GrafanaPage/index'),
         name: 'Grafana',
-        hidden: true,
         meta: { title: 'Grafana', icon: 'yicongrafana', noCache: false },
+        hidden: true,
         props: true
       }
     ]
@@ -116,49 +116,44 @@ export const asyncRoutes = [
   {
     path: '/monitorManager',
     component: Layout,
-    meta: { title: 'Monitor', icon: 'yicongrafana' },
+    meta: { title: 'Monitor', icon: 'yicongrafana', roles: ['admin'] },
     children: [
       {
         path: '/monitor',
         component: () => import('@/modules/monitor/NodeList'),
         name: 'NodeList',
-        meta: { title: 'NodeList', icon: 'yiconprometheusprometheusjiankongfuwu', noCache: false },
-        props: true
+        meta: { title: 'NodeList', icon: 'yiconprometheusprometheusjiankongfuwu', noCache: false }
       },
       {
         path: '/serviceMonitor',
         component: () => import('@/modules/monitor/ServiceList'),
         name: 'ServiceList',
-        meta: { title: 'ServiceList', icon: 'yiconprocess', noCache: false },
-        props: true
+        meta: { title: 'ServiceList', icon: 'yiconprocess', noCache: false }
       }
     ]
   },
   {
     path: '/bcControl',
     component: Layout,
-    meta: { title: 'bcControl', icon: 'el-icon-set-up' },
+    meta: { title: 'bcControl', icon: 'el-icon-set-up', roles: ['admin'] },
     children: [
       {
         path: '/BCNewVerFileUpload',
         component: () => import('@/modules/service-control/BCNewVerFileUpload'),
         name: 'BCNewVerFileUpload',
-        meta: { title: 'BCNewVerFileUpload', icon: 'el-icon-upload', noCache: false, roles: ['admin'] },
-        props: true
+        meta: { title: 'BCNewVerFileUpload', icon: 'el-icon-upload', noCache: false, roles: ['admin'] }
       },
       {
         path: '/BCVersionManagement',
         component: () => import('@/modules/service-control/BCVersionManagement'),
         name: 'BCVersionManagement',
-        meta: { title: 'BCVersionManagement', icon: 'yiconversions', noCache: false, roles: ['admin'] },
-        props: true
+        meta: { title: 'BCVersionManagement', icon: 'yiconversions', noCache: false, roles: ['admin'] }
       },
       {
         path: '/BCLogDownload',
         component: () => import('@/modules/service-control/BCLogDownload'),
         name: 'BCLogDownload',
-        meta: { title: 'BCLogDownload', icon: 'el-icon-download', noCache: false },
-        props: true
+        meta: { title: 'BCLogDownload', icon: 'el-icon-download', noCache: false, roles: ['admin'] }
       }
     ]
   },
@@ -171,36 +166,51 @@ export const asyncRoutes = [
         path: '/userManagement',
         component: () => import('@/views/system/permission/UserManagement'),
         name: 'userManagement',
-        meta: { title: 'userManagement', icon: 'el-icon-user', noCache: false },
-        props: true
+        meta: { title: 'userManagement', icon: 'el-icon-user', noCache: false }
       },
       {
         path: '/roleManagement',
         component: () => import('@/views/system/permission/RoleManagement'),
         name: 'roleManagement',
-        meta: { title: 'roleManagement', icon: 'yiconrole_icon', noCache: false },
-        props: true
+        meta: { title: 'roleManagement', icon: 'yiconrole_icon', noCache: false }
       },
       {
         path: '/configManagement',
         component: () => import('@/views/system/sys-config/ConfigManagement'),
         name: 'configManagement',
-        meta: { title: 'configManagement', icon: 'yiconset_configure_hov', noCache: false },
-        props: true
+        meta: { title: 'configManagement', icon: 'yiconset_configure_hov', noCache: false }
       },
       {
         path: '/systemLog',
         component: () => import('@/views/system/sys-log/LogViewer'),
         name: 'systemLog',
-        meta: { title: 'systemLog', icon: 'yiconwulianwang-', noCache: false },
-        props: true
+        meta: { title: 'systemLog', icon: 'yiconwulianwang-', noCache: false }
+      }
+    ]
+  },
+  {
+    path: '/maintenancePlan',
+    component: Layout,
+    meta: { title: 'maintenancePlan', icon: 'yiconjihua', roles: ['pm'] },
+    children: [
+      {
+        path: '/mainPlanEdit',
+        component: () => import('@/modules/maintenance/plan/mainPlanEdit'),
+        name: 'mainPlanEdit',
+        meta: { title: 'mainPlanEdit', icon: 'el-icon-document', noCache: false }
+      },
+      {
+        path: '/achievementRate',
+        component: () => import('@/modules/maintenance/plan/achievementRate'),
+        name: 'achievementRate',
+        meta: { title: 'achievementRate', icon: 'el-icon-document', noCache: false }
       }
     ]
   },
   {
     path: '/notification',
     component: Layout,
-    meta: { title: 'notification', icon: 'el-icon-chat-line-round', roles: ['admin'] },
+    meta: { title: 'notification', icon: 'el-icon-chat-line-round' },
     children: [
       {
         path: '/alarmList',

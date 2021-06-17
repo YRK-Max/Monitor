@@ -79,7 +79,12 @@ export default {
     BCLogDownload: '日志下载',
     notification: '通知管理',
     AlarmList: '报警历史',
-    AlarmSetting: '报警设置'
+    AlarmSetting: '报警设置',
+    maintenance: '设备保养',
+    maintenancePlan: '保养计划',
+    mainPlanEdit: '保养计划制定',
+    achievementRate: '保养达成统计',
+    consumableManage: '耗材管理'
   },
   navbar: {
     dashboard: '首页',
