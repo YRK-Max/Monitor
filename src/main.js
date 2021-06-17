@@ -17,12 +17,12 @@ import i18n from './lang' // internationalization
 import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
-
 import * as filters from './filters' // global filters
-
 // 自定义图标库
 import './icons/iconfont/iconfont.js'
 import './icons/iconfont/iconfont.css'
+// 打印插件
+import Print from 'vue-print-nb'
 
 /**
  * If you don't want to use mock-server
@@ -41,6 +41,8 @@ Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
   i18n: (key, value) => i18n.t(key, value)
 })
+
+Vue.use(Print)
 
 // register global utility filters
 Object.keys(filters).forEach(key => {
