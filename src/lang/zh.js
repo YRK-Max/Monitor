@@ -84,7 +84,9 @@ export default {
     maintenancePlan: '保养计划',
     mainPlanEdit: '保养计划制定',
     achievementRate: '保养达成统计',
-    consumableManage: '耗材管理'
+    consumableManage: '耗材管理',
+    PMFormInput: '保养表单录入',
+    PMHistory: '保养表单录入历史'
   },
   navbar: {
     dashboard: '首页',

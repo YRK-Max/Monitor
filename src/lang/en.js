@@ -84,7 +84,9 @@ export default {
     maintenancePlan: 'Maintenance Plan',
     mainPlanEdit: 'PM Plan Edit',
     achievementRate: 'Achievement Rate',
-    consumableManage: 'Consumable Manage'
+    consumableManage: 'Consumable Manage',
+    PMFormInput: 'PM Form Input',
+    PMHistory: 'PM History'
   },
   navbar: {
     dashboard: 'Dashboard',

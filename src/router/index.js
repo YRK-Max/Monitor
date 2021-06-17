@@ -208,6 +208,25 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/PM',
+    component: Layout,
+    meta: { title: 'maintenance', icon: 'yicontubiaozhizuomoban-135', roles: ['pm'] },
+    children: [
+      {
+        path: '/PMFormInput',
+        component: () => import('@/modules/maintenance/implement/PMFormInput'),
+        name: 'PMFormInput',
+        meta: { title: 'PMFormInput', icon: 'el-icon-document', noCache: false }
+      },
+      {
+        path: '/PMHistory',
+        component: () => import('@/modules/maintenance/implement/PMHistory'),
+        name: 'PMHistory',
+        meta: { title: 'PMHistory', icon: 'el-icon-document', noCache: false }
+      }
+    ]
+  },
+  {
     path: '/notification',
     component: Layout,
     meta: { title: 'notification', icon: 'el-icon-chat-line-round' },

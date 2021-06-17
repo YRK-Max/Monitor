@@ -37,13 +37,7 @@
             <el-button style="float: right; padding: 3px 0; margin-right: 10px" type="text" icon="el-icon-view" @click="handleHidden">隐藏</el-button>
           </div>
           <div class="plan-container">
-            <el-table
-              :data="currentPlanInfo['content']"
-            >
-              <el-table-column width="55px" type="selection" />
-              <el-table-column prop="name" label="名称" width="200" />
-              <el-table-column prop="content" label="工作内容" />
-            </el-table>
+            <p-m-form title="保养录入单" :form-json="formJson" />
           </div>
         </el-card>
       </el-col>
@@ -53,9 +47,10 @@
 
 <script>
 import PlanCard from '@/modules/maintenance/plan/components/PlanCard'
+import PMForm from '@/modules/maintenance/components/PMForm'
 export default {
   name: 'MainPlanEdit',
-  components: { PlanCard },
+  components: { PMForm, PlanCard },
   data() {
     return {
       currentPlanInfo: null,
@@ -87,7 +82,7 @@ export default {
           schedule: 100,
           assign: ['袁荣坤'],
           content: [
-            { name: '拉线设备联调', content: '法国v方可话剧方可才能靠近你客服那里那里呢' }
+            { name: '拉线设备联调', content: '清除碎片hhhhhh和灰尘' }
           ]
         },
         {
@@ -101,10 +96,11 @@ export default {
           schedule: 75,
           assign: ['李朝阳'],
           content: [
-            { name: '拉线设备联调', content: '法国v方可话剧方可才能靠近你客服那里那里呢' }
+            { name: '拉线联调', content: '法国客服那里那里呢' }
           ]
         }
-      ]
+      ],
+      formJson: []
     }
   },
   computed: {
@@ -115,6 +111,51 @@ export default {
   methods: {
     handlePlanCardClick(id) {
       this.currentPlanInfo = this.getInfoById(id)
+      this.formJson = [
+        {
+          key: '1',
+          children: [
+            { type: 'label', value: '姓名', span: 6 },
+            { type: 'input', value: '袁荣坤', span: 6, disabled: true },
+            { type: 'label', value: '部门', span: 6 },
+            { type: 'input', value: '软件部', span: 6, disabled: true }
+          ]
+        },
+        {
+          key: '2',
+          children: [
+            { type: 'label', value: '职务', span: 6 },
+            { type: 'input', value: '开发工程师', span: 6, disabled: true },
+            { type: 'label', value: '录入时间', span: 6, disabled: true },
+            { type: 'input', value: '2021-06-12 01:12:22', span: 6, disabled: true }
+          ]
+        },
+        {
+          key: '3',
+          children: [
+            { type: 'label', value: '保养时间', span: 6 },
+            { type: 'input', span: 18, value: '每周 2', disabled: true }
+          ]
+        },
+        {
+          key: '4',
+          children: this.formatContent(this.currentPlanInfo['content'])
+        },
+        {
+          key: '5',
+          children: [
+            { type: 'label', value: '保养耗材', span: 6 },
+            { type: 'input', span: 18, value: '' }
+          ]
+        },
+        {
+          key: '7',
+          children: [
+            { type: 'label', value: '备注', span: 6, height: 118 },
+            { type: 'textarea', span: 18, height: 118, value: '' }
+          ]
+        }
+      ]
     },
     handleHidden() {
       this.currentPlanInfo = null
@@ -125,6 +166,18 @@ export default {
         return list[0]
       }
       return { name: '', content: [] }
+    },
+    formatContent(list) {
+      const arrayList = [
+        { type: 'label', value: '保养事项', span: 24 }
+      ]
+      for (const content of list) {
+        arrayList.push({ type: 'label', value: content['name'], span: 6 })
+        arrayList.push({ type: 'contentLabel', disabled: true, span: 15, value: content['content'] })
+        arrayList.push({ type: 'checkbox', value: content['state'] || false, span: 3 })
+      }
+      arrayList.push({ type: 'label', value: '-- 事项结束 --', span: 24 })
+      return arrayList
     }
   }
 }
