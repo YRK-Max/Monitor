@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import ServiceCard from '@/views/bc-control/components/ServiceCard'
+import ServiceCard from '@/modules/service-control/components/ServiceCard'
 export default {
   name: 'BCNewVerFileUpload',
   components: { ServiceCard },

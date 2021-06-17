@@ -105,7 +105,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index/:url',
-        component: () => import('@/components/GrafanaPage/index'),
+        component: () => import('@/modules/monitor/GrafanaPage/index'),
         name: 'Grafana',
         hidden: true,
         meta: { title: 'Grafana', icon: 'yicongrafana', noCache: false },
@@ -114,20 +114,20 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/manager',
+    path: '/monitorManager',
     component: Layout,
     meta: { title: 'Monitor', icon: 'yicongrafana' },
     children: [
       {
         path: '/monitor',
-        component: () => import('@/views/monitor/NodeList'),
+        component: () => import('@/modules/monitor/NodeList'),
         name: 'NodeList',
         meta: { title: 'NodeList', icon: 'yiconprometheusprometheusjiankongfuwu', noCache: false },
         props: true
       },
       {
         path: '/serviceMonitor',
-        component: () => import('@/views/monitor/ServiceList'),
+        component: () => import('@/modules/monitor/ServiceList'),
         name: 'ServiceList',
         meta: { title: 'ServiceList', icon: 'yiconprocess', noCache: false },
         props: true
@@ -141,21 +141,21 @@ export const asyncRoutes = [
     children: [
       {
         path: '/BCNewVerFileUpload',
-        component: () => import('@/views/bc-control/BCNewVerFileUpload'),
+        component: () => import('@/modules/service-control/BCNewVerFileUpload'),
         name: 'BCNewVerFileUpload',
         meta: { title: 'BCNewVerFileUpload', icon: 'el-icon-upload', noCache: false, roles: ['admin'] },
         props: true
       },
       {
         path: '/BCVersionManagement',
-        component: () => import('@/views/bc-control/BCVersionManagement'),
+        component: () => import('@/modules/service-control/BCVersionManagement'),
         name: 'BCVersionManagement',
         meta: { title: 'BCVersionManagement', icon: 'yiconversions', noCache: false, roles: ['admin'] },
         props: true
       },
       {
         path: '/BCLogDownload',
-        component: () => import('@/views/bc-control/BCLogDownload'),
+        component: () => import('@/modules/service-control/BCLogDownload'),
         name: 'BCLogDownload',
         meta: { title: 'BCLogDownload', icon: 'el-icon-download', noCache: false },
         props: true
