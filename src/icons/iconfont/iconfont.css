@@ -1,8 +1,8 @@
 @font-face {
   font-family: "yicon-common"; /* Project id 2583905 */
-  src: url('iconfont.woff2?t=1623843027700') format('woff2'),
-       url('iconfont.woff?t=1623843027700') format('woff'),
-       url('iconfont.ttf?t=1623843027700') format('truetype');
+  src: url('iconfont.woff2?t=1623896233918') format('woff2'),
+       url('iconfont.woff?t=1623896233918') format('woff'),
+       url('iconfont.ttf?t=1623896233918') format('truetype');
 }
 
 .yicon-common {
@@ -11,6 +11,18 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.yiconhaocai:before {
+  content: "\e6a2";
+}
+
+.yiconjihua:before {
+  content: "\e824";
+}
+
+.yicontubiaozhizuomoban-135:before {
+  content: "\e633";
 }
 
 .yiconbell:before {

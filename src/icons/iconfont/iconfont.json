@@ -6,6 +6,27 @@
   "description": "通用图标库",
   "glyphs": [
     {
+      "icon_id": "14475724",
+      "name": "耗材",
+      "font_class": "haocai",
+      "unicode": "e6a2",
+      "unicode_decimal": 59042
+    },
+    {
+      "icon_id": "19993599",
+      "name": "计划",
+      "font_class": "jihua",
+      "unicode": "e824",
+      "unicode_decimal": 59428
+    },
+    {
+      "icon_id": "17619279",
+      "name": "设备保养",
+      "font_class": "tubiaozhizuomoban-135",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    },
+    {
       "icon_id": "17575446",
       "name": "bell",
       "font_class": "bell",
