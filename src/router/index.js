@@ -195,13 +195,13 @@ export const asyncRoutes = [
     children: [
       {
         path: '/mainPlanEdit',
-        component: () => import('@/modules/maintenance/plan/mainPlanEdit'),
+        component: () => import('@/modules/maintenance/plan/MainPlanEdit'),
         name: 'mainPlanEdit',
         meta: { title: 'mainPlanEdit', icon: 'el-icon-document', noCache: false }
       },
       {
         path: '/achievementRate',
-        component: () => import('@/modules/maintenance/plan/achievementRate'),
+        component: () => import('@/modules/maintenance/plan/AchievementRate'),
         name: 'achievementRate',
         meta: { title: 'achievementRate', icon: 'el-icon-document', noCache: false }
       }

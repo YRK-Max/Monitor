@@ -1,5 +1,9 @@
 <template>
-  <div>achievementRate</div>
+  <div class="main-div">
+    <el-row :gutter="8">
+      <el-col />
+    </el-row>
+  </div>
 </template>
 
 <script>
