@@ -1,20 +1,25 @@
 <template>
-  <div id="formModalArea" class="main-div">
-    <div style="text-align: center; margin-bottom: 15px;">
-      <h2 style="font-weight: bolder">{{ title }}</h2>
+  <div>
+    <div style="width: 100%; text-align: right">
+      <el-button v-print="'#formModalArea'" type="primary" plain circle icon="el-icon-printer" />
     </div>
-    <el-form>
-      <el-row v-for="row in formJson" :key="row.key">
-        <el-col
-          v-for="col in row.children"
-          :key="row.key + row.children.indexOf(col)"
-          :span="col.span"
-          :style="{height: (col.height || 32) +'px'}"
-        >
-          <FormItem v-model="col.value" :type="col.type" :value="col.value" :disabled="col.disabled" />
-        </el-col>
-      </el-row>
-    </el-form>
+    <div id="formModalArea" class="main-div">
+      <div style="text-align: center; margin-bottom: 15px;">
+        <h2 style="font-weight: bolder">{{ title }}</h2>
+      </div>
+      <el-form>
+        <el-row v-for="row in formJson" :key="row.key">
+          <el-col
+            v-for="col in row.children"
+            :key="row.key + row.children.indexOf(col)"
+            :span="col.span"
+            :style="{height: (col.height || 32) +'px'}"
+          >
+            <FormItem v-model="col.value" :type="col.type" :value="col.value" :disabled="col.disabled" />
+          </el-col>
+        </el-row>
+      </el-form>
+    </div>
   </div>
 </template>
 

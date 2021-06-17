@@ -35,22 +35,28 @@
             <el-button style="float: right; padding: 3px 0" type="text" icon="el-icon-circle-plus-outline">添加内容</el-button>
             <el-button style="float: right; padding: 3px 0; margin-right: 10px" type="text" icon="el-icon-delete">删除</el-button>
             <el-button style="float: right; padding: 3px 0; margin-right: 10px" type="text" icon="el-icon-view" @click="handleHidden">隐藏</el-button>
+            <el-button style="float: right; padding: 3px 0; margin-right: 10px" type="text" icon="el-icon-printer" @click="handleMakeForm">生成表单</el-button>
           </div>
           <div class="plan-container">
-            <p-m-form title="保养录入单" :form-json="formJson" />
+            <el-table :data="currentPlanInfo['content']">
+              <el-table-column type="selection" width="55" />
+              <el-table-column prop="name" label="任务名称" />
+              <el-table-column prop="content" label="任务内容" />
+            </el-table>
           </div>
         </el-card>
       </el-col>
     </el-row>
+    <PMInputFormModal :visible="PMInputFormModalVisible" :current-plan-info="currentPlanInfo" @close="handlePMInputFormModalClose" />
   </div>
 </template>
 
 <script>
 import PlanCard from '@/modules/maintenance/plan/components/PlanCard'
-import PMForm from '@/modules/maintenance/components/PMForm'
+import PMInputFormModal from '@/modules/maintenance/plan/modal/PMInputFormModal'
 export default {
   name: 'MainPlanEdit',
-  components: { PMForm, PlanCard },
+  components: { PMInputFormModal, PlanCard },
   data() {
     return {
       currentPlanInfo: null,
@@ -100,7 +106,7 @@ export default {
           ]
         }
       ],
-      formJson: []
+      PMInputFormModalVisible: false
     }
   },
   computed: {
@@ -111,54 +117,12 @@ export default {
   methods: {
     handlePlanCardClick(id) {
       this.currentPlanInfo = this.getInfoById(id)
-      this.formJson = [
-        {
-          key: '1',
-          children: [
-            { type: 'label', value: '姓名', span: 6 },
-            { type: 'input', value: '袁荣坤', span: 6, disabled: true },
-            { type: 'label', value: '部门', span: 6 },
-            { type: 'input', value: '软件部', span: 6, disabled: true }
-          ]
-        },
-        {
-          key: '2',
-          children: [
-            { type: 'label', value: '职务', span: 6 },
-            { type: 'input', value: '开发工程师', span: 6, disabled: true },
-            { type: 'label', value: '录入时间', span: 6, disabled: true },
-            { type: 'input', value: '2021-06-12 01:12:22', span: 6, disabled: true }
-          ]
-        },
-        {
-          key: '3',
-          children: [
-            { type: 'label', value: '保养时间', span: 6 },
-            { type: 'input', span: 18, value: '每周 2', disabled: true }
-          ]
-        },
-        {
-          key: '4',
-          children: this.formatContent(this.currentPlanInfo['content'])
-        },
-        {
-          key: '5',
-          children: [
-            { type: 'label', value: '保养耗材', span: 6 },
-            { type: 'input', span: 18, value: '' }
-          ]
-        },
-        {
-          key: '7',
-          children: [
-            { type: 'label', value: '备注', span: 6, height: 118 },
-            { type: 'textarea', span: 18, height: 118, value: '' }
-          ]
-        }
-      ]
     },
     handleHidden() {
       this.currentPlanInfo = null
+    },
+    handleMakeForm() {
+      this.PMInputFormModalVisible = true
     },
     getInfoById(id) {
       const list = this.planList.filter(p => { return p.id === id })
@@ -167,17 +131,8 @@ export default {
       }
       return { name: '', content: [] }
     },
-    formatContent(list) {
-      const arrayList = [
-        { type: 'label', value: '保养事项', span: 24 }
-      ]
-      for (const content of list) {
-        arrayList.push({ type: 'label', value: content['name'], span: 6 })
-        arrayList.push({ type: 'contentLabel', disabled: true, span: 15, value: content['content'] })
-        arrayList.push({ type: 'checkbox', value: content['state'] || false, span: 3 })
-      }
-      arrayList.push({ type: 'label', value: '-- 事项结束 --', span: 24 })
-      return arrayList
+    handlePMInputFormModalClose(data) {
+      this.PMInputFormModalVisible = data
     }
   }
 }
