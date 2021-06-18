@@ -189,3 +189,28 @@ aside {
 .multiselect--active {
   z-index: 1000 !important;
 }
+
+// 通用CSS
+.full-w {
+  width: 100%;
+}
+
+.full-h {
+  width: 100%;
+}
+
+.enable-scroll {
+  overflow: scroll;
+}
+
+.m-5{
+  margin: 5px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.no-scroll-bar::-webkit-scrollbar{width: 0!important;}
+.no-scroll-bar { -ms-overflow-style: none; }
+.no-scroll-bar { overflow: -moz-scrollbars-none; }

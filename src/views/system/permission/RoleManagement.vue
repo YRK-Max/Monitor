@@ -28,6 +28,7 @@
             <el-table
               ref="UserTable"
               v-loading="loading"
+              stripe
               :data="displayRoleList"
               :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
               :height="height"
