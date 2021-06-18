@@ -25,10 +25,10 @@
           <div :style="{ height: (height-115)/3 + 'px', padding: '5px', overflow: 'scroll' }" class="no-scroll-bar">
             <el-form label-width="100px">
               <el-form-item label="工作地点">
-                <el-input disabled />
+                <el-input :value="currentTask!==null?currentTask.content.location:''" disabled />
               </el-form-item>
               <el-form-item label="工作内容">
-                <el-input type="textarea" disabled :rows="5" />
+                <el-input :value="currentTask!==null?currentTask.content.content:''" type="textarea" disabled :rows="5" />
               </el-form-item>
             </el-form>
           </div>
@@ -46,8 +46,8 @@
                 <el-col :lg="10">
                   <el-form-item label="耗材名称" class="full-width">
                     <el-select v-model="consumableForm.name">
-                      <el-option value="1">耗材1</el-option>
-                      <el-option value="2">耗材2</el-option>
+                      <el-option value="1" label="耗材1" />
+                      <el-option value="2" label="耗材2" />
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -95,24 +95,41 @@ export default {
           taskName: '机油补充',
           state: 'notFinish', priority: '一般',
           creator: 'admin', type: '周期任务', plan: '清洗机维保计划',
-          assign: ['袁荣坤', '杨志']
+          assign: ['袁荣坤', '杨志'],
+          content: {
+            location: 'MP车间',
+            content: '给设备补充机油'
+          }
         },
         {
           taskId: '100002', taskName: '轴承检查',
           state: 'notFinish', priority: '一般',
           creator: 'admin', type: '周期任务',
-          plan: '清洗机维保计划', assign: ['袁荣坤', '杨志']
+          plan: '清洗机维保计划', assign: ['袁荣坤', '杨志'],
+          content: {
+            location: '检测中心2区',
+            content: '检查每台机器轴承的损耗情况'
+          }
         },
         {
-          taskId: '100003', taskName: '内部清洁',
+          taskId: '100003', taskName: '调试',
           state: 'finish', priority: '一般',
           creator: 'admin', type: '周期任务',
-          plan: '清洗机维保计划', assign: ['袁荣坤', '杨志'] },
+          plan: '清洗机维保计划', assign: ['袁荣坤', '杨志'],
+          content: {
+            location: 'MP车间',
+            content: '调试拉线，跑通流程，并反馈结果'
+          }
+        },
         {
-          taskId: '200001', taskName: '内部清洁',
+          taskId: '200001', taskName: '调试',
           state: 'finish', priority: '一般',
           creator: 'admin', type: '周期任务',
-          plan: '拉线设备联调', assign: ['袁荣坤']
+          plan: '拉线设备联调', assign: ['袁荣坤'],
+          content: {
+            location: 'MP车间',
+            content: '调试拉线，跑通流程，并反馈结果'
+          }
         }
       ],
       consumableForm: {
