@@ -196,6 +196,44 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/abnormal',
+    component: Layout,
+    meta: { title: 'abnormalHandler', icon: 'el-icon-circle-close', roles: ['pm'] },
+    children: [
+      {
+        path: '/CaseCloseManage',
+        component: () => import('@/modules/on-duty/abnormal/CaseCloseManage'),
+        name: 'CaseCloseManage',
+        meta: { title: 'CaseCloseManage', icon: 'el-icon-document', noCache: false }
+      },
+      {
+        path: '/AbnormalAnalysis',
+        component: () => import('@/modules/on-duty/abnormal/AbnormalAnalysis'),
+        name: 'AbnormalAnalysis',
+        meta: { title: 'AbnormalAnalysis', icon: 'el-icon-document', noCache: false }
+      }
+    ]
+  },
+  {
+    path: '/handover',
+    component: Layout,
+    meta: { title: 'handoverManage', icon: 'el-icon-copy-document', roles: ['pm'] },
+    children: [
+      {
+        path: '/HandoverForm',
+        component: () => import('@/modules/on-duty/handover/HandoverForm'),
+        name: 'HandoverForm',
+        meta: { title: 'HandoverForm', icon: 'el-icon-document', noCache: false }
+      },
+      {
+        path: '/HandoverHistory',
+        component: () => import('@/modules/on-duty/handover/HandoverHistory'),
+        name: 'HandoverHistory',
+        meta: { title: 'HandoverHistory', icon: 'el-icon-document', noCache: false }
+      }
+    ]
+  },
+  {
     path: '/notification',
     component: Layout,
     meta: { title: 'notification', icon: 'el-icon-chat-line-round' },

@@ -85,8 +85,14 @@ export default {
     mainPlanEdit: '保养计划制定',
     achievementRate: '保养达成统计',
     consumableManage: '耗材管理',
-    PMFormInput: '保养表单录入',
-    PMHistory: '保养表单录入历史'
+    PMFormInput: '保养任务落实',
+    PMHistory: '保养表单录入历史',
+    abnormalHandler: '异常处理',
+    handoverManage: '交接管理',
+    CaseCloseManage: '异常处理',
+    AbnormalAnalysis: '异常分析',
+    HandoverForm: '交接数据录入',
+    HandoverHistory: '交接历史'
   },
   navbar: {
     dashboard: '首页',
