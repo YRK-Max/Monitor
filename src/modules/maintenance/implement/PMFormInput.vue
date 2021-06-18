@@ -1,9 +1,9 @@
 <template>
-  <div class="main-div">
+  <div class="main-div m-5">
     <el-row :gutter="8">
       <el-col :lg="currentTask === null?24:10">
         <el-card header="今天任务列表">
-          <div :style="{ height: height + 'px' }" class="task-container no-scroll">
+          <div :style="{ height: height + 'px' }" class="task-container no-scroll-bar">
             <task-card
               v-for="task in taskList"
               :key="taskList.indexOf(task)"
@@ -22,7 +22,7 @@
       </el-col>
       <el-col :lg="currentTask === null?0:14">
         <el-card :header="'具体工作内容 -- ' + (currentTask !== null?currentTask['taskName']:'空任务')">
-          <div :style="{ height: (height-115)/3 + 'px', padding: '5px', overflow: 'scroll' }" class="no-scroll">
+          <div :style="{ height: (height-115)/3 + 'px', padding: '5px', overflow: 'scroll' }" class="no-scroll-bar">
             <el-form label-width="100px">
               <el-form-item label="工作地点">
                 <el-input disabled />
@@ -37,7 +37,7 @@
           style="margin-top: 10px"
           :header="'维保数据录入 -- ' + (currentTask !== null?currentTask['taskName']:'空任务')"
         >
-          <div :style="{ height: (height-60)*2/3 + 'px', padding: '5px', overflow: 'scroll' }" class="no-scroll">
+          <div :style="{ height: (height-60)*2/3 + 'px', padding: '5px', overflow: 'scroll' }" class="no-scroll-bar">
             <div style="margin-bottom: 10px; margin-left: 10px; width: 100%;">
               <el-button type="primary">任务完结</el-button>
             </div>
@@ -137,7 +137,6 @@ export default {
 
 <style lang="scss" scoped>
 .main-div {
-  margin: 5px;
   ::v-deep .el-form-item__label {
     font-weight: normal;
     text-align: center;
@@ -154,9 +153,6 @@ export default {
 .task-container {
   overflow-y: scroll;
 }
-.no-scroll::-webkit-scrollbar { width: 0 !important }
-.no-scroll { -ms-overflow-style: none; }
-.no-scroll { overflow: -moz-scrollbars-none; }
 
 .full-width {
   width: 100%;
