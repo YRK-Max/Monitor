@@ -26,8 +26,10 @@
         <el-table
           ref="UserTable"
           v-loading="loading"
+          stripe
           :data="displayList"
           :height="height"
+          :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
           @selection-change="handleSelectionChange"
         >
           <el-table-column
