@@ -158,37 +158,6 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/system',
-    component: Layout,
-    meta: { title: 'systemManage', icon: 'el-icon-setting', roles: ['admin'] },
-    children: [
-      {
-        path: '/userManagement',
-        component: () => import('@/views/system/permission/UserManagement'),
-        name: 'userManagement',
-        meta: { title: 'userManagement', icon: 'el-icon-user', noCache: false }
-      },
-      {
-        path: '/roleManagement',
-        component: () => import('@/views/system/permission/RoleManagement'),
-        name: 'roleManagement',
-        meta: { title: 'roleManagement', icon: 'yiconrole_icon', noCache: false }
-      },
-      {
-        path: '/configManagement',
-        component: () => import('@/views/system/sys-config/ConfigManagement'),
-        name: 'configManagement',
-        meta: { title: 'configManagement', icon: 'yiconset_configure_hov', noCache: false }
-      },
-      {
-        path: '/systemLog',
-        component: () => import('@/views/system/sys-log/LogViewer'),
-        name: 'systemLog',
-        meta: { title: 'systemLog', icon: 'yiconwulianwang-', noCache: false }
-      }
-    ]
-  },
-  {
     path: '/maintenancePlan',
     component: Layout,
     meta: { title: 'maintenancePlan', icon: 'yiconjihua', roles: ['pm'] },
@@ -242,6 +211,37 @@ export const asyncRoutes = [
         component: () => import('@/views/notification/alarm/AlarmSetting'),
         name: 'AlarmSetting',
         meta: { title: 'AlarmSetting', icon: 'el-icon-notebook-1', noCache: false }
+      }
+    ]
+  },
+  {
+    path: '/system',
+    component: Layout,
+    meta: { title: 'systemManage', icon: 'el-icon-setting', roles: ['admin'] },
+    children: [
+      {
+        path: '/userManagement',
+        component: () => import('@/views/system/permission/UserManagement'),
+        name: 'userManagement',
+        meta: { title: 'userManagement', icon: 'el-icon-user', noCache: false }
+      },
+      {
+        path: '/roleManagement',
+        component: () => import('@/views/system/permission/RoleManagement'),
+        name: 'roleManagement',
+        meta: { title: 'roleManagement', icon: 'yiconrole_icon', noCache: false }
+      },
+      {
+        path: '/configManagement',
+        component: () => import('@/views/system/sys-config/ConfigManagement'),
+        name: 'configManagement',
+        meta: { title: 'configManagement', icon: 'yiconset_configure_hov', noCache: false }
+      },
+      {
+        path: '/systemLog',
+        component: () => import('@/views/system/sys-log/LogViewer'),
+        name: 'systemLog',
+        meta: { title: 'systemLog', icon: 'yiconwulianwang-', noCache: false }
       }
     ]
   },
