@@ -22,6 +22,7 @@
               :assign="plan.assign"
               style="margin-bottom: 8px"
               @click="handlePlanCardClick"
+              @setting="handlePlanCardSetting"
             />
           </div>
         </el-card>
@@ -70,7 +71,7 @@ export default {
           creator: 'admin',
           type: '周期性计划',
           priority: '一般',
-          cycle: '* * 5 * * ? *',
+          cycle: '0 0 0 1 * ?',
           schedule: 65,
           assign: ['袁荣坤', '杨志'],
           content: [
@@ -86,7 +87,7 @@ export default {
           creator: 'admin',
           type: '周期性计划',
           priority: '一般',
-          cycle: '* * 5 * * ? *',
+          cycle: '0 0 0 1 * ?',
           schedule: 100,
           assign: ['袁荣坤'],
           content: [
@@ -100,7 +101,7 @@ export default {
           creator: 'admin',
           type: '周期性计划',
           priority: '一般',
-          cycle: '* * 5 * * ? *',
+          cycle: '0 0 0 1 * ?',
           schedule: 75,
           assign: ['李朝阳'],
           content: [
@@ -118,6 +119,9 @@ export default {
   methods: {
     handlePlanCardClick(id) {
       this.currentPlanInfo = this.getInfoById(id)
+    },
+    handlePlanCardSetting(id) {
+      this.$refs.XMPlanForm.controlVisible(true, 'edit', this.getInfoById(id))
     },
     handleHidden() {
       this.currentPlanInfo = null

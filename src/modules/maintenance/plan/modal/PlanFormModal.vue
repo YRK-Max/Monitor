@@ -3,6 +3,7 @@
     title="计划添加"
     :visible.sync="visible"
     :width="device==='mobile'?'90%':'40%'"
+    :destroy-on-close="true"
   >
     <el-form
       ref="XPlanForm"
@@ -56,7 +57,7 @@ export default {
   },
   data() {
     return {
-      visible: true,
+      visible: false,
       planForm: {
         name: '',
         creator: this.$store.getters.name,
@@ -79,8 +80,20 @@ export default {
     }
   },
   methods: {
-    controlVisible(visible) {
+    controlVisible(visible, mode = 'add', info = null) {
       this.visible = visible
+      if (mode === 'edit' && info !== null) {
+        this.planForm = info
+      } else {
+        this.planForm = {
+          name: '',
+          creator: this.$store.getters.name,
+          type: '',
+          priority: 0,
+          cycle: '0 0 0 1 * ?',
+          assign: []
+        }
+      }
     },
     handleCronEdit() {
       this.showCron = true
