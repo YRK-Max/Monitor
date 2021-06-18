@@ -2,7 +2,6 @@
   <el-dialog
     title="保养录入单"
     :visible.sync="realVisible"
-    :before-close="handleClose"
   >
     <p-m-form title="保养录入单" :form-json="formJson" />
     <span slot="footer" class="dialog-footer">
@@ -18,10 +17,6 @@ export default {
   name: 'PMInputFormModal',
   components: { PMForm },
   props: {
-    visible: {
-      type: Boolean,
-      default: false
-    },
     currentPlanInfo: {
       type: Object,
       default: () => { return { name: '', content: [] } }
@@ -34,16 +29,14 @@ export default {
     }
   },
   watch: {
-    visible: {
+    'currentPlanInfo': {
       handler(n, o) {
-        this.realVisible = n
         this.refreshData()
       },
       deep: true
     }
   },
   mounted() {
-    this.realVisible = this.visible
     this.refreshData()
   },
   methods: {
@@ -106,8 +99,8 @@ export default {
       arrayList.push({ type: 'label', value: '-- 事项结束 --', span: 24 })
       return arrayList
     },
-    handleClose() {
-      this.$emit('close', false)
+    controlVisible(visible) {
+      this.realVisible = visible
     }
   }
 }

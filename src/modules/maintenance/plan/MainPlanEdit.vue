@@ -5,7 +5,7 @@
         <el-card :body-style="{ height: height-160 + 'px', padding: '10px' }">
           <div slot="header" class="clearfix">
             <span>保养计划列表</span>
-            <el-button style="float: right; padding: 3px 0" type="text" icon="el-icon-plus">添加计划</el-button>
+            <el-button style="float: right; padding: 3px 0" type="text" icon="el-icon-circle-plus-outline" @click="handleAddPlan">添加计划</el-button>
           </div>
           <div class="plan-container">
             <plan-card
@@ -47,16 +47,18 @@
         </el-card>
       </el-col>
     </el-row>
-    <PMInputFormModal :visible="PMInputFormModalVisible" :current-plan-info="currentPlanInfo" @close="handlePMInputFormModalClose" />
+    <PMInputFormModal ref="XMPMInput" :current-plan-info="currentPlanInfo" />
+    <PlanFormModal ref="XMPlanForm" />
   </div>
 </template>
 
 <script>
 import PlanCard from '@/modules/maintenance/plan/components/PlanCard'
 import PMInputFormModal from '@/modules/maintenance/plan/modal/PMInputFormModal'
+import PlanFormModal from '@/modules/maintenance/plan/modal/PlanFormModal'
 export default {
   name: 'MainPlanEdit',
-  components: { PMInputFormModal, PlanCard },
+  components: { PlanFormModal, PMInputFormModal, PlanCard },
   data() {
     return {
       currentPlanInfo: null,
@@ -105,8 +107,7 @@ export default {
             { name: '拉线联调', content: '法国客服那里那里呢' }
           ]
         }
-      ],
-      PMInputFormModalVisible: false
+      ]
     }
   },
   computed: {
@@ -122,7 +123,7 @@ export default {
       this.currentPlanInfo = null
     },
     handleMakeForm() {
-      this.PMInputFormModalVisible = true
+      this.$refs.XMPMInput.controlVisible(true)
     },
     getInfoById(id) {
       const list = this.planList.filter(p => { return p.id === id })
@@ -131,8 +132,8 @@ export default {
       }
       return { name: '', content: [] }
     },
-    handlePMInputFormModalClose(data) {
-      this.PMInputFormModalVisible = data
+    handleAddPlan() {
+      this.$refs.XMPlanForm.controlVisible(true)
     }
   }
 }
@@ -149,6 +150,7 @@ export default {
 .plan-container {
   width: 100%;
   height: 100%;
+  overflow: auto;
 }
 .plan-container::-webkit-scrollbar { width: 0 !important }
 .plan-container { -ms-overflow-style: none; }
