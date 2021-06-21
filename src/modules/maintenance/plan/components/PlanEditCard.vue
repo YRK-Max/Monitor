@@ -33,8 +33,8 @@
             </el-col>
             <el-col class="mb-15" :lg="8" :sm="12">
               <div style="width: 100%; height: 100%; display: flex; align-items: center">
-                <label class="title-label">进度</label>
-                <el-progress style="width: calc(100% - 90px)" :percentage="schedule" />
+                <label class="title-label">下次执行时间</label>
+                <label>{{ getLastTime(cycle) }}</label>
               </div>
             </el-col>
             <el-col :lg="16">
@@ -44,7 +44,7 @@
           </el-row>
         </el-col>
         <el-col class="operation-content" :span="3">
-          <el-tag>进行中</el-tag>
+          <el-button icon="el-icon-setting" type="primary" circle @click="handlePlanSetting" />
         </el-col>
       </el-row>
     </div>
@@ -52,8 +52,10 @@
 </template>
 
 <script>
+import { parseTime } from '@/utils'
+
 export default {
-  name: 'PlanCard',
+  name: 'PlanEditCard',
   props: {
     planId: {
       type: String,
@@ -95,6 +97,15 @@ export default {
   methods: {
     handlerClick() {
       this.$emit('click', this.planId)
+    },
+    handlePlanSetting(e) {
+      e.stopPropagation()
+      this.$emit('setting', this.planId)
+    },
+    getLastTime(cron) {
+      const parser = require('cron-parser')
+      const interval = parser.parseExpression(cron)
+      return parseTime(interval.next(), undefined)
     }
   }
 }

@@ -8,7 +8,7 @@
             <el-button style="float: right; padding: 3px 0" type="text" icon="el-icon-circle-plus-outline" @click="handleAddPlan">添加计划</el-button>
           </div>
           <div class="plan-container">
-            <plan-card
+            <plan-edit-card
               v-for="plan in planList"
               :key="planList.indexOf(plan)"
               :plan-id="plan.id"
@@ -54,12 +54,12 @@
 </template>
 
 <script>
-import PlanCard from '@/modules/maintenance/plan/components/PlanCard'
+import PlanEditCard from '@/modules/maintenance/plan/components/PlanEditCard'
 import PMInputFormModal from '@/modules/maintenance/plan/modal/PMInputFormModal'
 import PlanFormModal from '@/modules/maintenance/plan/modal/PlanFormModal'
 export default {
   name: 'MainPlanEdit',
-  components: { PlanFormModal, PMInputFormModal, PlanCard },
+  components: { PlanFormModal, PMInputFormModal, PlanEditCard },
   data() {
     return {
       currentPlanInfo: null,
