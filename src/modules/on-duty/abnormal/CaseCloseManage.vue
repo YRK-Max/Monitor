@@ -4,7 +4,7 @@
       <el-col :lg="14">
         <el-card header="异常列表">
           <div :style="{ height: height + 'px' }" class="content-body enable-scroll no-scroll-bar">
-            <el-button type="primary">异常录入</el-button>
+            <el-button type="primary" @click="handleAbnormalIn">异常录入</el-button>
             <el-table
               style="margin-top: 10px"
               stripe
@@ -90,12 +90,15 @@
         </el-card>
       </el-col>
     </el-row>
+    <AbnormalInFormModal ref="CCMXAFM" />
   </div>
 </template>
 
 <script>
+import AbnormalInFormModal from '@/modules/on-duty/abnormal/modal/AbnormalInFormModal'
 export default {
   name: 'CaseCloseManage',
+  components: { AbnormalInFormModal },
   data() {
     return {
       abnormalList: [
@@ -107,6 +110,11 @@ export default {
   computed: {
     height() {
       return this.$store.getters.body_height - 170
+    }
+  },
+  methods: {
+    handleAbnormalIn() {
+      this.$refs.CCMXAFM.show()
     }
   }
 }
