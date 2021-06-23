@@ -128,15 +128,12 @@
           <el-select
             v-model="userForm.roleNames"
             multiple
-            filterable
-            allow-create
-            default-first-option
             placeholder="请选择角色"
             style="width: 100%"
           >
             <el-option
               v-for="item in roleOptions"
-              :key="item.name"
+              :key="roleOptions.indexOf(item)"
               :label="item.name"
               :value="item.name"
             />

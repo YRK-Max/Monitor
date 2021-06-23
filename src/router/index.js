@@ -81,7 +81,7 @@ export const asyncRoutes = [
         path: 'index/:url',
         component: () => import('@/modules/monitor/GrafanaPage/index'),
         name: 'Grafana',
-        meta: { title: 'Grafana', icon: 'yicongrafana', noCache: false },
+        meta: { title: 'Grafana', icon: 'yicongrafana', noCache: false, roles: ['monitor'] },
         hidden: true,
         props: true
       }
@@ -90,7 +90,7 @@ export const asyncRoutes = [
   {
     path: '/monitorManager',
     component: Layout,
-    meta: { title: 'Monitor', icon: 'yicongrafana', roles: ['admin'] },
+    meta: { title: 'Monitor', icon: 'yicongrafana', roles: ['monitor'] },
     children: [
       {
         path: '/monitor',
@@ -109,25 +109,25 @@ export const asyncRoutes = [
   {
     path: '/bcControl',
     component: Layout,
-    meta: { title: 'bcControl', icon: 'el-icon-set-up', roles: ['admin'] },
+    meta: { title: 'bcControl', icon: 'el-icon-set-up', roles: ['monitor'] },
     children: [
       {
         path: '/BCNewVerFileUpload',
         component: () => import('@/modules/service-control/BCNewVerFileUpload'),
         name: 'BCNewVerFileUpload',
-        meta: { title: 'BCNewVerFileUpload', icon: 'el-icon-upload', noCache: false, roles: ['admin'] }
+        meta: { title: 'BCNewVerFileUpload', icon: 'el-icon-upload', noCache: false }
       },
       {
         path: '/BCVersionManagement',
         component: () => import('@/modules/service-control/BCVersionManagement'),
         name: 'BCVersionManagement',
-        meta: { title: 'BCVersionManagement', icon: 'yiconversions', noCache: false, roles: ['admin'] }
+        meta: { title: 'BCVersionManagement', icon: 'yiconversions', noCache: false }
       },
       {
         path: '/BCLogDownload',
         component: () => import('@/modules/service-control/BCLogDownload'),
         name: 'BCLogDownload',
-        meta: { title: 'BCLogDownload', icon: 'el-icon-download', noCache: false, roles: ['admin'] }
+        meta: { title: 'BCLogDownload', icon: 'el-icon-download', noCache: false }
       }
     ]
   },
