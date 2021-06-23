@@ -2,25 +2,26 @@
   <div>
     <div class="main-item">
       <el-popover
-        placement="bottom"
+        placement="bottom-start"
         title="报警消息"
         width="400"
         trigger="hover"
       >
         <div class="message-box-div">
+          <empty-placeholder :is-show="alarmList.length===0" />
           <message-card
             v-for="alarm in alarmList"
-            :key="alarm.key"
+            :key="alarmList.indexOf(alarm)"
             class="message-card"
-            :type="alarm.value['type']"
-            :time="alarm.value['time']"
-            :source="alarm.value['source']"
-            :content="alarm.value['content']"
+            :type="alarm['type']"
+            :time="alarm['time']"
+            :source="alarm['source']"
+            :content="alarm['content']"
           />
         </div>
         <div class="button-panel">
           <el-button style="margin-top: 15px" @click="handlerMoreClick">查看更多</el-button>
-          <el-button type="primary" plain style="margin-top: 15px">一键清除</el-button>
+          <el-button type="primary" plain style="margin-top: 15px" @click="handlerClear">一键清除</el-button>
         </div>
         <div slot="reference" :class="alarmList.length >0?'alarm':'normal'">
           <svg-icon class="bell-icon" class-name="bell-icon" icon-class="bell" />
@@ -32,21 +33,25 @@
 
 <script>
 import MessageCard from '@/views/notification/components/MessageCard'
+import EmptyPlaceholder from '@/components/EmptyPlaceholder'
 export default {
   name: 'Notification',
-  components: { MessageCard },
+  components: { EmptyPlaceholder, MessageCard },
   data() {
     return {
       alarmList: [
-        { key: 1, value: { type: 'severe', time: '2021-06-04 14:00:00', source: '10.3.5.124:8081', content: '测试测试u成都上课纪律部队数据库表设计考虑搬家' }},
-        { key: 2, value: { type: 'mid', time: '2021-06-04 14:00:00', source: '10.3.5.124:8081', content: '测试测试u成都上课纪律部队数据库表设计考虑搬家' }},
-        { key: 3, value: { type: 'info', time: '2021-06-04 14:00:00', source: '10.3.5.124:8081', content: '测试测试u成都上课纪律部队数据库表设计考虑搬家' }}
+        { type: 'severe', time: '2021-06-04 14:00:00', source: '10.3.5.124:8081', content: '测试测试u成都上课纪律部队数据库表设计考虑搬家' },
+        { type: 'mid', time: '2021-06-04 14:00:00', source: '10.3.5.124:8081', content: '测试测试u成都上课纪律部队数据库表设计考虑搬家' },
+        { type: 'info', time: '2021-06-04 14:00:00', source: '10.3.5.124:8081', content: '测试测试u成都上课纪律部队数据库表设计考虑搬家' }
       ]
     }
   },
   methods: {
     handlerMoreClick() {
       this.$router.push('alarmList')
+    },
+    handlerClear() {
+      this.alarmList = []
     }
   }
 }
@@ -80,7 +85,7 @@ export default {
 }
 
 .message-box-div {
-  height: 200px;
+  height: 260px;
   overflow: auto;
 }
 .message-box-div::-webkit-scrollbar { width: 0 !important }
