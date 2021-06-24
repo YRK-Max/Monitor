@@ -4,8 +4,7 @@
       <div :class="[ 'relative', 'ml-10', '-enter-x']">
         <div style="display: flex; width: 60%; height: 60px;">
           <img src="@/assets/image/logo.png">
-          <label style="display: inline-block; line-height: 60px; font-size: 30px; margin-left: 10px; color: #f6f6f6">EcoFabb
-            MTS</label>
+          <label style="display: inline-block; line-height: 60px; font-size: 28px; margin-left: 10px; color: #f6f6f6">EcoFabb MTS</label>
         </div>
         <div class="mt-45">
           <img style="width: 350px" src="@/assets/svg/login-box-bg.svg" alt="">
@@ -438,7 +437,7 @@ $light_gray: #eee;
 }
 
 .font-medium {
-  font-size: 30px;
+  font-size: 28px;
 }
 
 .font-normal {

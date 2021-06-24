@@ -37,20 +37,20 @@ module.exports = {
         ws: false,
         changeOrigin: true
       },
-      '/prometheus': {
+      '/prometheusApi': {
         target: 'http://10.3.5.124:9090',
         ws: false,
         changeOrigin: true,
         pathRewrite: {
-          '^/prometheus': '/api/v1' // rewrite path
+          '^/prometheusApi': '/api/v1' // rewrite path
         }
       },
-      '/cis': {
+      '/cisApi': {
         target: 'http://10.3.5.124:44398',
         ws: false,
         changeOrigin: true,
         pathRewrite: {
-          '^/cis': '/api' // rewrite path
+          '^/cisApi': '/api' // rewrite path
         }
       }
     }

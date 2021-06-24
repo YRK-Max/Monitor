@@ -99,7 +99,7 @@
 
 <script>
 import { getAllNodeInfo } from '@/api/prometheus'
-import { getGrafanaDashboardConfs, deleteGrafanaDashboardConf } from '@/api/monitor'
+import { getGrafanaDashboardConfs, deleteGrafanaDashboardConf, getPrometheusConf } from '@/api/monitor'
 import GrafanaConfFormModal from '@/modules/monitor/modal/GrafanaConfFormModal'
 
 export default {
@@ -143,6 +143,10 @@ export default {
         if (res) {
           this.instanceList = res
         }
+      })
+
+      getPrometheusConf().then(res => {
+        console.log(res)
       })
     },
     async refreshTargets() {
