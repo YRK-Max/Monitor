@@ -18,6 +18,32 @@
             </div>
           </el-form-item>
         </el-form>
+        <el-divider />
+        <div class="mb-10">
+          <el-button type="primary" @click="handlerAddGrafanaCOnf">新增</el-button>
+        </div>
+        <el-table
+          :data="instanceList"
+          :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
+          :height="300"
+          highlight-current-row
+          @row-click="handlerInstanceListClick"
+        >
+          <el-table-column type="index" label="NO." />
+          <el-table-column prop="group" label="JOB 组" />
+          <el-table-column prop="name" label="JOB 名称" />
+          <el-table-column prop="job" label="JOB" />
+          <el-table-column prop="targets" label="目标" />
+          <el-table-column prop="uid" label="UID" />
+          <el-table-column prop="url" label="URL" :show-overflow-tooltip="true" />
+          <el-table-column label="操作" align="center">
+            <template slot-scope="scope">
+              <el-button type="text">编辑</el-button>
+              <el-divider direction="vertical" />
+              <el-button type="text" @click="handlerInstanceDelete(scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-card>
     </el-col>
     <el-col :span="24">
@@ -67,14 +93,18 @@
         </el-row>
       </el-card>
     </el-col>
+    <grafana-conf-form-modal ref="xGrafanaFormModal" />
   </el-row>
 </template>
 
 <script>
 import { getAllNodeInfo } from '@/api/prometheus'
+import { getGrafanaDashboardConfs, deleteGrafanaDashboardConf } from '@/api/monitor'
+import GrafanaConfFormModal from '@/modules/monitor/modal/GrafanaConfFormModal'
 
 export default {
   name: 'MonitorConfig',
+  components: { GrafanaConfFormModal },
   data() {
     return {
       GrafanaForm: {
@@ -99,7 +129,8 @@ export default {
           { min: 60, message: 'evaluation 时长不能小于 1 分钟' }
         ]
       },
-      targetList: []
+      targetList: [],
+      instanceList: []
     }
   },
   created() {
@@ -108,12 +139,30 @@ export default {
   methods: {
     initData() {
       this.refreshTargets()
+      getGrafanaDashboardConfs().then(res => {
+        if (res) {
+          this.instanceList = res
+        }
+      })
     },
     async refreshTargets() {
       const targets = await getAllNodeInfo()
       if (targets && targets['data']) {
         this.targetList = targets['data']['activeTargets']
       }
+    },
+    handlerInstanceListClick(row) {
+      console.log(row)
+    },
+    handlerInstanceDelete(row) {
+      const params = { jobName: row['job'], uid: row['uid'] }
+      deleteGrafanaDashboardConf(params).then(res => {
+        console.log(res)
+        this.$message.success('删除成功')
+      })
+    },
+    handlerAddGrafanaCOnf() {
+      this.$refs.xGrafanaFormModal.controlVisible(true)
     }
   }
 }
@@ -124,6 +173,10 @@ export default {
   margin: 5px;
   ::v-deep .el-col {
     margin-bottom: 12px;
+  }
+
+  ::v-deep .el-divider--horizontal {
+    margin: 10px 0;
   }
 }
 </style>
