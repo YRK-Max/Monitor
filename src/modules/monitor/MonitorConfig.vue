@@ -74,7 +74,7 @@
 import { getAllNodeInfo } from '@/api/prometheus'
 
 export default {
-  name: 'ConfigManagement',
+  name: 'MonitorConfig',
   data() {
     return {
       GrafanaForm: {

@@ -103,6 +103,12 @@ export const asyncRoutes = [
         component: () => import('@/modules/monitor/ServiceList'),
         name: 'ServiceList',
         meta: { title: 'ServiceList', icon: 'yiconprocess', noCache: false }
+      },
+      {
+        path: '/MonitorConfig',
+        component: () => import('@/modules/monitor/MonitorConfig'),
+        name: 'MonitorConfig',
+        meta: { title: 'MonitorConfig', icon: 'yiconset_configure_hov', noCache: false }
       }
     ]
   },
@@ -242,12 +248,6 @@ export const asyncRoutes = [
         component: () => import('@/views/system/permission/RoleManagement'),
         name: 'roleManagement',
         meta: { title: 'roleManagement', icon: 'yiconrole_icon', noCache: false }
-      },
-      {
-        path: '/configManagement',
-        component: () => import('@/views/system/sys-config/ConfigManagement'),
-        name: 'configManagement',
-        meta: { title: 'configManagement', icon: 'yiconset_configure_hov', noCache: false }
       },
       {
         path: '/systemLog',

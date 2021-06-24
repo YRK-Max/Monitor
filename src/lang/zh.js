@@ -92,7 +92,8 @@ export default {
     CaseCloseManage: '异常处理',
     AbnormalAnalysis: '异常分析',
     HandoverForm: '交接数据录入',
-    HandoverHistory: '交接历史'
+    HandoverHistory: '交接历史',
+    MonitorConfig: '监控设置'
   },
   navbar: {
     dashboard: '首页',

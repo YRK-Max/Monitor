@@ -86,7 +86,8 @@ export default {
     achievementRate: 'Achievement Rate',
     consumableManage: 'Consumable Manage',
     PMFormInput: 'PM Form Input',
-    PMHistory: 'PM History'
+    PMHistory: 'PM History',
+    MonitorConfig: 'Monitor Config'
   },
   navbar: {
     dashboard: 'Dashboard',
