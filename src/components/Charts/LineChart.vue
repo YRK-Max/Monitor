@@ -31,7 +31,7 @@ export default {
     },
     seriesData: {
       type: Array,
-      default: () => [{ name: '设备1', data: [13, 10, 3, 12, 15, 30, 7] }]
+      default: () => [{ name: '设备1', data: [86, 82, 83, 80, 85, 87, 90] }]
     },
     xAxis: {
       type: Array,
@@ -40,8 +40,9 @@ export default {
     yAxis: {
       type: Array,
       default: () => [{
-        name: '单位：m³',
+        name: '单位：%',
         type: 'value',
+        scale: true,
         axisTick: {
           show: false
         },
@@ -112,7 +113,7 @@ export default {
           symbolSize: 6,
           barMaxWidth: 30,
           stack: s['stack'] || null,
-          symbol: 'circle',
+          symbol: 'none',
           smooth: true,
           yAxisIndex: s['yIndex'] || 0,
           lineStyle: {
