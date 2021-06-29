@@ -203,6 +203,10 @@ aside {
   overflow: scroll;
 }
 
+.enable-y-scroll {
+  overflow-y: scroll;
+}
+
 .m-5{
   margin: 5px;
 }
@@ -213,6 +217,16 @@ aside {
 
 .mb-10 {
   margin-bottom: 10px;
+}
+
+.mb-6 {
+  margin-bottom: 6px;
+}
+
+.label-overflow-ellipsis{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .no-scroll-bar::-webkit-scrollbar{width: 0!important;}

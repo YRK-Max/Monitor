@@ -93,7 +93,10 @@ export default {
     AbnormalAnalysis: '异常分析',
     HandoverForm: '交接数据录入',
     HandoverHistory: '交接历史',
-    MonitorConfig: '监控设置'
+    MonitorConfig: '监控设置',
+    LayoutDesigner: 'Layout 设计器',
+    PLCMonitor: 'PLC 监控',
+    MacMonitor: '设备监控'
   },
   navbar: {
     dashboard: '首页',

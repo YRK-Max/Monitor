@@ -138,6 +138,25 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/PLCMonitor',
+    component: Layout,
+    meta: { title: 'PLCMonitor', icon: 'yiconplc', roles: ['pm'] },
+    children: [
+      {
+        path: '/MacMonitor',
+        component: () => import('@/modules/plc-monitor/MacMonitor'),
+        name: 'MacMonitor',
+        meta: { title: 'MacMonitor', icon: 'yiconmonitor', noCache: false }
+      },
+      {
+        path: '/LayoutDesigner',
+        component: () => import('@/modules/circuit-editor/CircuitEdit'),
+        name: 'LayoutDesigner',
+        meta: { title: 'LayoutDesigner', icon: 'yiconset_configure_hov', noCache: false }
+      }
+    ]
+  },
+  {
     path: '/maintenancePlan',
     component: Layout,
     meta: { title: 'maintenancePlan', icon: 'yiconjihua', roles: ['pm'] },

@@ -87,7 +87,8 @@ export default {
     consumableManage: 'Consumable Manage',
     PMFormInput: 'PM Form Input',
     PMHistory: 'PM History',
-    MonitorConfig: 'Monitor Config'
+    MonitorConfig: 'Monitor Config',
+    LayoutDesigner: 'Layout Designer'
   },
   navbar: {
     dashboard: 'Dashboard',

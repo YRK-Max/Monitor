@@ -6,6 +6,41 @@
   "description": "通用图标库",
   "glyphs": [
     {
+      "icon_id": "1173777",
+      "name": "monitor",
+      "font_class": "monitor",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "22474886",
+      "name": "plc",
+      "font_class": "plc",
+      "unicode": "ebb6",
+      "unicode_decimal": 60342
+    },
+    {
+      "icon_id": "11682316",
+      "name": "异常分析",
+      "font_class": "yichangfenxi",
+      "unicode": "e637",
+      "unicode_decimal": 58935
+    },
+    {
+      "icon_id": "13479130",
+      "name": "异常",
+      "font_class": "B1",
+      "unicode": "e6f9",
+      "unicode_decimal": 59129
+    },
+    {
+      "icon_id": "9512603",
+      "name": "握手",
+      "font_class": "hands",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
       "icon_id": "14475724",
       "name": "耗材",
       "font_class": "haocai",
