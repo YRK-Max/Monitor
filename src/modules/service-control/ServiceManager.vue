@@ -2,9 +2,9 @@
   <el-row class="main-row">
     <el-col :span="24">
       <el-card class="params-panel">
-        <el-form inline label-position="left">
-          <el-form-item label="IP" label-width="50px">
-            <el-input style="width: 250px" />
+        <el-form :model="form" inline label-position="left">
+          <el-form-item label="服务类型" label-width="90px">
+            <query-select v-model="form.type" :options="serviceTypeList" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary">查询</el-button>
@@ -12,24 +12,39 @@
         </el-form>
       </el-card>
     </el-col>
-    <el-col :span="24">
-      <div style="margin: 10px">
-        <label>Grafana Server : </label><el-tag>{{ Grafana.server }}</el-tag>
-      </div>
+    <el-col :span="8">
+      <el-card :body-style="{ padding: '6px' }">
+        <div slot="header" class="clearfix">
+          <span>服务器实例列表</span>
+        </div>
+        <div class="content enable-y-scroll no-scroll-bar" :style="{ height: (height + 5) + 'px' }">
+          <service-card
+            v-for="instance in serviceInstanceList"
+            :key="instance.hostname"
+            type="instance"
+            style="margin-bottom: 3px"
+            :hostname="instance.hostname"
+            :description="instance.description"
+            :title="instance.title"
+            :os="instance.os"
+            @click="handleInstanceClick"
+          />
+        </div>
+      </el-card>
     </el-col>
-    <el-col :span="24">
+    <el-col :span="16">
       <el-card
         style="margin: 5px; width: calc(100% - 10px)"
         header
       >
         <div slot="header" class="clearfix">
-          <span>服务列表</span>
+          <span>进程列表</span>
         </div>
         <el-table
-          :data="windowsNodeList"
+          :data="NodeList"
           :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
           tooltip-effect="dark"
-          @row-click="handleRowClick"
+          :height="height"
         >
           <el-table-column
             prop="job"
@@ -55,6 +70,7 @@
             label="Instance"
             align="center"
             sortable
+            :show-overflow-tooltip="true"
           />
           <el-table-column
             prop="lastError"
@@ -77,6 +93,14 @@
               </div>
             </template>
           </el-table-column>
+          <el-table-column
+            label="Operation"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-button type="primary" icon="el-icon-setting" circle @click="handleManager($event, scope.row)" />
+            </template>
+          </el-table-column>
         </el-table>
       </el-card>
     </el-col>
@@ -85,91 +109,48 @@
 
 <script>
 import { getAllNodeInfo, getOSNodeList } from '@/api/prometheus'
+import QuerySelect from '@/components/QuerySelect'
+import ServiceCard from '@/modules/service-control/components/ServiceCard'
 
 export default {
-  name: 'ServiceList',
+  name: 'ServiceManager',
+  components: { ServiceCard, QuerySelect },
   data() {
     return {
-      Grafana: {
-        server: '10.3.5.124:3000'
+      form: {
+        type: ''
       },
-      windowsNodeList: [],
-      linuxNodeList: [],
-      dialogVisible: false,
+      NodeList: [],
       currentService: {
         job: '',
         health: 'up',
         instance: ''
-      }
+      },
+      serviceTypeList: [
+        { value: 'WebUI_Linux', label: 'WebUI_Linux' },
+        { value: 'Cissystem_Linux', label: 'Cissystem_Linux' },
+        { value: 'CisServer_Windows', label: 'CisServer_Windows' },
+        { value: 'EQLinker_windows', label: 'EQLinker_windows' }
+      ],
+      serviceInstanceList: [
+        { hostname: '10.3.5.168:2020', description: 'LINE1#CUT1', title: 'CIS SYSTEM', os: 'Windows' },
+        { hostname: '10.3.5.113:8080', description: 'Report', title: 'OTHER', os: 'Linux' },
+        { hostname: '10.3.5.135:2020', description: 'LINE1#CUT1', title: 'CIS SYSTEM', os: 'Windows' }
+      ]
+    }
+  },
+  computed: {
+    height() {
+      return this.$store.getters.body_height - 270
     }
   },
   created() {
     this.initNodeData()
   },
   methods: {
-    handleRowClick(row) {
-      if (row['url']) {
-        this.$router.push({
-          name: 'Grafana',
-          params: { url: row['url'] }
-        })
-      } else {
-        this.$message.info('该服务未配置看板')
-      }
-    },
     async initNodeData() {
-      const windows_list = []
+      const nlist = []
       let nodeInfoList = []
-      const url_ref_list = [
-        {
-          'Group': 'Dashboard',
-          'Name': 'Windows服务器监控',
-          'JOB': 'Cissystem_Linux',
-          'Targets': '10.3.5.124:9100',
-          'Uid': '9CWBz0bikw',
-          'Url': 'http://{@IPAddress}/d/9CWBz0bikw/linux-fu-wu-qi-jian-kong?orgId=1'
-        },
-        {
-          'Group': 'Dashboard',
-          'Name': 'Windows服务器监控',
-          'JOB': 'CisServer_Windows',
-          'Targets': '10.3.5.104:9182',
-          'Uid': 'Kdh0OoSGz',
-          'Url': 'http://{@IPAddress}/d/Kdh0OoSGz/windowsfu-wu-qi-jian-kong?orgId=1'
-        },
-        {
-          'Group': 'Dashboard',
-          'Name': '.NET Core -App',
-          'JOB': 'CisServerApi',
-          'Targets': '10.3.5.104:44344',
-          'Uid': 'h1FE3PpWk',
-          'Url': 'http://{@IPAddress}/d/h1FE3PpWk/net-core-app?orgId=1'
-        },
-        {
-          'Group': 'Dashboard',
-          'Name': 'Linux 服务器监控',
-          'JOB': 'EQLinker_windows',
-          'Targets': '10.3.5.109:9182',
-          'Uid': 'Kdh0OoSGz',
-          'Url': 'http://{@IPAddress}/d/Kdh0OoSGz/windowsfu-wu-qi-jian-kong?orgId=1&var-job=EQLinker_windows&var-hostname=All&var-instance=10.3.5.109:9182&var-show_hostname=DESKTOP-FIQS2U7'
-        },
-        {
-          'Group': 'Dashboard',
-          'Name': 'Linux 服务器监控',
-          'JOB': 'WebUI_Linux',
-          'Targets': '10.3.5.116:9100',
-          'Uid': '9CWBz0bikw',
-          'Url': 'http://{@IPAddress}/d/9CWBz0bikw/linux-fu-wu-qi-jian-kong?orgId=1&var-job=WebUI_Linux&var-hostname=All&var-node=10.3.5.116:9100&var-device=All&var-maxmount=%2F&var-show_hostname=localhost.localdomain'
-        },
-        {
-          'Group': 'Dashboard',
-          'Name': 'CIS30 服务器集合',
-          'JOB': '--',
-          'Targets': '10.3.5.124:3000',
-          'Uid': '-C03y-3Gz',
-          'Url': 'http://{@IPAddress}/d/-C03y-3Gz/cis30-fu-wu-qi-ji-he?orgId=1'
-        }
-      ]
       const res_nodeInfoList = await getAllNodeInfo()
       const res_list_service = await getOSNodeList('up')
 
@@ -191,27 +172,19 @@ export default {
               temp['lastError'] = ni['lastError']
               break
             }
-
-            for (const ref of url_ref_list) {
-              if (ref['JOB'] === temp['job']) {
-                temp['url'] = ref['Url'].replace('{@IPAddress}', this.Grafana.server) + '&kiosk'
-                break
-              }
-            }
           }
-          windows_list.push(temp)
+          nlist.push(temp)
         })
       }
 
-      this.windowsNodeList = windows_list
+      this.NodeList = nlist
     },
     handleManager(e, row) {
       e.stopPropagation()
-      this.dialogVisible = true
       this.currentService = row
     },
-    handleClose() {
-      this.dialogVisible = false
+    handleInstanceClick() {
+
     }
   }
 }
@@ -250,14 +223,11 @@ export default {
   margin-top: 20px;
 }
 
-.info-div {
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: space-between;
-
-  .info-span {
-    width: 200px;
-    text-align: center;
+.content {
+  ::v-deep .el-card {
+    .el-card__body {
+      padding: 10px;
+    }
   }
 }
 </style>

@@ -134,6 +134,12 @@ export const asyncRoutes = [
         component: () => import('@/modules/service-control/BCLogDownload'),
         name: 'BCLogDownload',
         meta: { title: 'BCLogDownload', icon: 'el-icon-download', noCache: false }
+      },
+      {
+        path: '/ServiceManager',
+        component: () => import('@/modules/service-control/ServiceManager'),
+        name: 'ServiceManager',
+        meta: { title: 'ServiceManager', icon: 'el-icon-document', noCache: false }
       }
     ]
   },
@@ -150,7 +156,7 @@ export const asyncRoutes = [
       },
       {
         path: '/LayoutDesigner',
-        component: () => import('@/modules/circuit-editor/CircuitEdit'),
+        component: () => import('@/modules/layout-designer/LayoutDesigner'),
         name: 'LayoutDesigner',
         meta: { title: 'LayoutDesigner', icon: 'yiconset_configure_hov', noCache: false }
       }

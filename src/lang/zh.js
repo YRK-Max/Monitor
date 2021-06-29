@@ -65,7 +65,7 @@ export default {
     profile: '个人中心',
     Grafana: '监控面板',
     NodeList: 'Node 列表',
-    ServiceList: '服务列表',
+    ServiceList: '服务进程列表',
     Monitor: '监控服务',
     systemManage: '系统管理',
     userManagement: '用户管理',
@@ -96,7 +96,8 @@ export default {
     MonitorConfig: '监控设置',
     LayoutDesigner: 'Layout 设计器',
     PLCMonitor: 'PLC 监控',
-    MacMonitor: '设备监控'
+    MacMonitor: '设备监控',
+    ServiceManager: '服务进程管理'
   },
   navbar: {
     dashboard: '首页',
