@@ -7,7 +7,7 @@
             <query-select v-model="form.type" :options="serviceTypeList" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">查询</el-button>
+            <el-button type="primary" @click="handlerSearch">查询</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -20,13 +20,13 @@
         <div class="content enable-y-scroll no-scroll-bar" :style="{ height: (height + 5) + 'px' }">
           <service-card
             v-for="instance in serviceInstanceList"
-            :key="instance.hostname"
+            :key="instance['serviceHost']"
             type="instance"
             style="margin-bottom: 3px"
-            :hostname="instance.hostname"
-            :description="instance.description"
-            :title="instance.title"
-            :os="instance.os"
+            :hostname="instance['serviceHost'].split(':')[0]"
+            :description="instance['sysVersion']"
+            :title="instance['serviceType']"
+            :os="instance['sysName']"
             @click="handleInstanceClick"
           />
         </div>
@@ -41,7 +41,7 @@
           <span>进程列表</span>
         </div>
         <el-table
-          :data="NodeList"
+          :data="ProcessList"
           :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
           tooltip-effect="dark"
           :height="height"
@@ -108,9 +108,9 @@
 </template>
 
 <script>
-import { getAllNodeInfo, getOSNodeList } from '@/api/prometheus'
 import QuerySelect from '@/components/QuerySelect'
 import ServiceCard from '@/modules/service-control/components/ServiceCard'
+import { getAllServiceInstance, getProcessByHost } from '@/api/monitor'
 
 export default {
   name: 'ServiceManager',
@@ -120,7 +120,7 @@ export default {
       form: {
         type: ''
       },
-      NodeList: [],
+      ProcessList: [],
       currentService: {
         job: '',
         health: 'up',
@@ -132,11 +132,8 @@ export default {
         { value: 'CisServer_Windows', label: 'CisServer_Windows' },
         { value: 'EQLinker_windows', label: 'EQLinker_windows' }
       ],
-      serviceInstanceList: [
-        { hostname: '10.3.5.168:2020', description: 'LINE1#CUT1', title: 'CIS SYSTEM', os: 'Windows' },
-        { hostname: '10.3.5.113:8080', description: 'Report', title: 'OTHER', os: 'Linux' },
-        { hostname: '10.3.5.135:2020', description: 'LINE1#CUT1', title: 'CIS SYSTEM', os: 'Windows' }
-      ]
+      serviceInstanceListSource: [],
+      serviceInstanceList: []
     }
   },
   computed: {
@@ -145,46 +142,32 @@ export default {
     }
   },
   created() {
-    this.initNodeData()
+    this.initInstanceData()
   },
   methods: {
-    async initNodeData() {
-      const nlist = []
-      let nodeInfoList = []
-      const res_nodeInfoList = await getAllNodeInfo()
-      const res_list_service = await getOSNodeList('up')
-
-      if (res_nodeInfoList && res_nodeInfoList['status'].toString() === 'success' && res_nodeInfoList['data']['activeTargets']) {
-        const active_list = res_nodeInfoList['data']['activeTargets']
-        active_list.forEach(d => { d['active_state'] = 'active' })
-        const dropped_list = res_nodeInfoList['data']['droppedTargets']
-        dropped_list.forEach(d => { d['active_state'] = 'dropped' })
-        nodeInfoList = Object.assign(active_list, ...dropped_list)
-      }
-
-      if (res_list_service['status'].toString() === 'success') {
-        res_list_service['data']['result'].forEach(d => {
-          const temp = d['metric']
-          for (const ni of nodeInfoList) {
-            if (ni['labels']['job'] === temp['job']) {
-              temp['active_state'] = ni['active_state']
-              temp['health'] = ni['health']
-              temp['lastError'] = ni['lastError']
-              break
-            }
-          }
-          nlist.push(temp)
-        })
-      }
-
-      this.NodeList = nlist
+    async initInstanceData() {
+      this.serviceInstanceListSource = await getAllServiceInstance()
+      this.serviceInstanceList = this.serviceInstanceListSource
     },
     handleManager(e, row) {
       e.stopPropagation()
       this.currentService = row
     },
-    handleInstanceClick() {
-
+    handleInstanceClick(data) {
+      const params = { requestType: -1, serverHost: data }
+      getProcessByHost(params).then(res => {
+        // 未完待续
+        console.log(res)
+      })
+    },
+    handlerSearch() {
+      if (this.form.type !== '') {
+        this.serviceInstanceList = this.serviceInstanceListSource.filter(instance => {
+          return instance['serviceType'] === this.form.type
+        })
+      } else {
+        this.serviceInstanceList = this.serviceInstanceListSource
+      }
     }
   }
 }

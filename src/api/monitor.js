@@ -31,3 +31,19 @@ export function editGrafanaDashboardConf(data) {
     data
   })
 }
+
+// service process manager
+export function getAllServiceInstance() {
+  return cis_request({
+    url: '/app/server-manager/server-node',
+    method: 'get'
+  })
+}
+
+export function getProcessByHost(data) {
+  return cis_request({
+    url: '/app/server-manager/server-node-process',
+    method: 'post',
+    data
+  })
+}

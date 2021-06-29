@@ -21,7 +21,7 @@
         <br>
         <label>OS: </label><label>{{ os }}</label>
         <br>
-        <label>实例描述: </label><label>{{ description }}</label>
+        <label>版本: </label><label>{{ description }}</label>
       </div>
     </div>
   </el-card>
@@ -94,12 +94,17 @@ export default {
 .logo-image {
   margin-right: 10px;
   height: 65px;
+  width: 110px;
   text-align: center;
   line-height: 60px;
   color: white;
   font-weight: bold;
   border-radius: 5px;
-  flex-basis: 110px
+  flex-basis: 110px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 0 6px;
 }
 .info-card {
   margin-top: 6px;

@@ -68,8 +68,8 @@ export default {
       }
     },
     handleChange(val) {
-      if (val['value']) {
-        this.$emit('changed', val['value'])
+      if (val) {
+        this.$emit('changed', val)
       }
     },
     handleClear() {
