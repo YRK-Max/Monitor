@@ -65,7 +65,7 @@ export default {
       if (this.type === 'service') {
         this.$emit('click', this.serviceName)
       } else if (this.type === 'instance') {
-        this.$emit('click', this.hostname)
+        this.$emit('click', { host: this.hostname, type: this.title })
       }
     }
   }

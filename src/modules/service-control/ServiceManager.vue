@@ -1,5 +1,5 @@
 <template>
-  <el-row class="main-row">
+  <el-row v-loading="loading" class="main-row">
     <el-col :span="24">
       <el-card class="params-panel">
         <el-form :model="form" inline label-position="left">
@@ -17,7 +17,7 @@
         <div slot="header" class="clearfix">
           <span>服务器实例列表</span>
         </div>
-        <div class="content enable-y-scroll no-scroll-bar" :style="{ height: (height + 5) + 'px' }">
+        <div class="content enable-y-scroll no-scroll-bar" :style="{ height: (height + 32) + 'px' }">
           <service-card
             v-for="instance in serviceInstanceList"
             :key="instance['serviceHost']"
@@ -34,68 +34,91 @@
     </el-col>
     <el-col :span="16">
       <el-card
-        style="margin: 5px; width: calc(100% - 10px)"
+        style="margin-left: 5px; width: calc(100% - 10px)"
+        :body-style="{ padding: '5px' }"
         header
       >
         <div slot="header" class="clearfix">
-          <span>进程列表</span>
+          <span>{{ '进程列表 [Host : ' + currentServerHost + ']' }}</span>
+          <router-link
+            style="float: right; color: #0088ff;"
+            :to="{path: '/ProgramConf', query: { type: currentServerType, host: currentServerHost }}"
+          >
+            转到配置<i class="el-icon-right" />
+          </router-link>
         </div>
         <el-table
           :data="ProcessList"
           :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
           tooltip-effect="dark"
-          :height="height"
+          :height="height+32"
         >
           <el-table-column
-            prop="job"
-            label="JOB"
+            type="index"
+            label="#"
+            width="50"
           />
           <el-table-column
-            prop="health"
-            label="Status"
+            prop="processId"
+            label="进程ID"
+            width="80px"
             align="center"
+          />
+          <el-table-column
+            prop="processName"
+            label="进程名称"
+            align="center"
+            width="200px"
+          />
+          <el-table-column
+            prop="processRunStatus"
+            label="运行状态"
+            align="center"
+            width="200px"
           >
             <template slot-scope="scope">
               <div style="display: flex; align-content: center; justify-content: center">
-                <i :class="['yicon-common', 'yiconB', scope.row['health']]" />
-                <el-tag :type="scope.row['health'] === 'up'?'success':'danger'" size="small">{{
-                  scope.row['health']
+                <i :class="['yicon-common', 'yiconB', scope.row['processRunStatus']]" />
+                <el-tag :type="scope.row['processRunStatus'] === 'RUN'?'success':'danger'" size="small">{{
+                  scope.row['processRunStatus']
                 }}
                 </el-tag>
               </div>
             </template>
           </el-table-column>
           <el-table-column
-            prop="instance"
-            label="Instance"
+            prop="processArgs"
+            label="进程参数"
             align="center"
-            sortable
             :show-overflow-tooltip="true"
+            width="200px"
           />
           <el-table-column
-            prop="lastError"
-            label="Last Error"
+            prop="processPath"
+            label="进程路径"
             align="center"
             :show-overflow-tooltip="true"
+            width="200px"
           />
           <el-table-column
-            prop="active_state"
-            label="活动状态"
+            prop="processVersion"
+            label="进程版本"
             align="center"
             :show-overflow-tooltip="true"
-          >
-            <template slot-scope="scope">
-              <div style="display: flex; align-content: center; justify-content: center">
-                <el-tag :type="scope.row['active_state'] === 'active'?'success':'danger'" size="small">{{
-                  scope.row['active_state']
-                }}
-                </el-tag>
-              </div>
-            </template>
-          </el-table-column>
+            width="200px"
+          />
+          <el-table-column
+            prop="programDesc"
+            label="进程描述"
+            align="center"
+            :show-overflow-tooltip="true"
+            width="250px"
+          />
           <el-table-column
             label="Operation"
             align="center"
+            fixed="right"
+            width="100px"
           >
             <template slot-scope="scope">
               <el-button type="primary" icon="el-icon-setting" circle @click="handleManager($event, scope.row)" />
@@ -121,11 +144,9 @@ export default {
         type: ''
       },
       ProcessList: [],
-      currentService: {
-        job: '',
-        health: 'up',
-        instance: ''
-      },
+      currentService: {},
+      currentServerType: null,
+      currentServerHost: null,
       serviceTypeList: [
         { value: 'WebUI_Linux', label: 'WebUI_Linux' },
         { value: 'Cissystem_Linux', label: 'Cissystem_Linux' },
@@ -133,7 +154,8 @@ export default {
         { value: 'EQLinker_windows', label: 'EQLinker_windows' }
       ],
       serviceInstanceListSource: [],
-      serviceInstanceList: []
+      serviceInstanceList: [],
+      loading: false
     }
   },
   computed: {
@@ -146,18 +168,36 @@ export default {
   },
   methods: {
     async initInstanceData() {
-      this.serviceInstanceListSource = await getAllServiceInstance()
-      this.serviceInstanceList = this.serviceInstanceListSource
+      this.loading = true
+      const serviceInstanceListRes = await getAllServiceInstance()
+      if (serviceInstanceListRes && serviceInstanceListRes['res']) {
+        this.serviceInstanceListSource = serviceInstanceListRes['res']
+        this.serviceInstanceList = this.serviceInstanceListSource
+        this.currentServerType = this.serviceInstanceList[0]['serviceType']
+        this.currentServerHost = (this.serviceInstanceList[0]['serviceHost']).split(':')[0]
+        this.getServiceNodeProcess(this.currentServerHost)
+      }
+      this.loading = false
     },
     handleManager(e, row) {
       e.stopPropagation()
       this.currentService = row
     },
     handleInstanceClick(data) {
-      const params = { requestType: -1, serverHost: data }
+      this.currentServerHost = data['host']
+      this.currentServerType = data['type']
+      this.getServiceNodeProcess(data['host'])
+    },
+    getServiceNodeProcess(host) {
+      this.loading = true
+      const params = { serverHost: host }
       getProcessByHost(params).then(res => {
-        // 未完待续
-        console.log(res)
+        if (res && res['res']) {
+          this.ProcessList = res['res']
+        } else {
+          this.$message.warning('该服务实例未上报进程数据')
+        }
+        this.loading = false
       })
     },
     handlerSearch() {
@@ -174,6 +214,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.main-row {
+  padding: 5px;
+}
 .params-panel {
   background: #f7faff;
   height: 65px;

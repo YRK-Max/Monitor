@@ -97,7 +97,8 @@ export default {
     LayoutDesigner: 'Layout 设计器',
     PLCMonitor: 'PLC 监控',
     MacMonitor: '设备监控',
-    ServiceManager: '服务进程管理'
+    ServiceManager: '服务进程管理',
+    ProgramConf: '服务程序配置'
   },
   navbar: {
     dashboard: '首页',

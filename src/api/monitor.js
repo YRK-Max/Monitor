@@ -43,7 +43,16 @@ export function getAllServiceInstance() {
 export function getProcessByHost(data) {
   return cis_request({
     url: '/app/server-manager/server-node-process',
-    method: 'post',
-    data
+    method: 'get',
+    params: data
   })
 }
+
+export function getProgramConf(data) {
+  return cis_request({
+    url: '/app/server-manager/program-conf-program-conf',
+    method: 'get',
+    params: data
+  })
+}
+

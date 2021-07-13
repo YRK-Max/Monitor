@@ -140,6 +140,13 @@ export const asyncRoutes = [
         component: () => import('@/modules/service-control/ServiceManager'),
         name: 'ServiceManager',
         meta: { title: 'ServiceManager', icon: 'el-icon-document', noCache: false }
+      },
+      {
+        path: '/ProgramConf',
+        component: () => import('@/modules/service-control/ProgramConf'),
+        name: 'ProgramConf',
+        meta: { title: 'ProgramConf', icon: 'el-icon-document', noCache: false },
+        hidden: true
       }
     ]
   },

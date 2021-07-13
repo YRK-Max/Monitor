@@ -88,7 +88,8 @@ export default {
     PMFormInput: 'PM Form Input',
     PMHistory: 'PM History',
     MonitorConfig: 'Monitor Config',
-    LayoutDesigner: 'Layout Designer'
+    LayoutDesigner: 'Layout Designer',
+    ProgramConf: 'Program Conf'
   },
   navbar: {
     dashboard: 'Dashboard',
