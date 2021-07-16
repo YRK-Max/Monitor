@@ -52,6 +52,7 @@
           :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
           tooltip-effect="dark"
           :height="height+32"
+          stripe
         >
           <el-table-column
             type="index"
@@ -170,7 +171,7 @@ export default {
     async initInstanceData() {
       this.loading = true
       const serviceInstanceListRes = await getAllServiceInstance()
-      if (serviceInstanceListRes && serviceInstanceListRes['res']) {
+      if (serviceInstanceListRes && serviceInstanceListRes['res'] && serviceInstanceListRes['res'].length > 0) {
         this.serviceInstanceListSource = serviceInstanceListRes['res']
         this.serviceInstanceList = this.serviceInstanceListSource
         this.currentServerType = this.serviceInstanceList[0]['serviceType']

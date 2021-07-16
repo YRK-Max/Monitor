@@ -118,12 +118,6 @@ export const asyncRoutes = [
     meta: { title: 'bcControl', icon: 'el-icon-set-up', roles: ['monitor'] },
     children: [
       {
-        path: '/BCNewVerFileUpload',
-        component: () => import('@/modules/service-control/BCNewVerFileUpload'),
-        name: 'BCNewVerFileUpload',
-        meta: { title: 'BCNewVerFileUpload', icon: 'el-icon-upload', noCache: false }
-      },
-      {
         path: '/BCVersionManagement',
         component: () => import('@/modules/service-control/BCVersionManagement'),
         name: 'BCVersionManagement',

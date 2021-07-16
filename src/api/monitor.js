@@ -56,3 +56,39 @@ export function getProgramConf(data) {
   })
 }
 
+// 文件上传
+export function upload_file(data) {
+  return cis_request({
+    url: '/app/file-common/upload-file',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryjdVraQ0GnFIBvbmT'
+    },
+    data
+  })
+}
+
+export function upload_program(data, host = undefined) {
+  return cis_request({
+    url: '/app/server-manager/create-and-update-program-package',
+    method: 'post',
+    data,
+    params: host
+  })
+}
+
+export function getPackgeList() {
+  return cis_request({
+    url: '/app/server-manager/program-packge',
+    method: 'get'
+  })
+}
+
+export function deletePackage(data) {
+  return cis_request({
+    url: '/app/server-manager/program-packge',
+    method: 'delete',
+    params: { programPackageIdItem: data }
+  })
+}
+

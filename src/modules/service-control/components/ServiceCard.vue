@@ -23,6 +23,9 @@
         <br>
         <label>版本: </label><label>{{ description }}</label>
       </div>
+      <div v-if="isManager" style="display: flex; justify-content: center; align-items: center;">
+        <el-button type="primary" plain circle icon="el-icon-setting" @click="handlerManageClick" />
+      </div>
     </div>
   </el-card>
 </template>
@@ -58,6 +61,10 @@ export default {
     os: {
       type: String,
       default: ''
+    },
+    isManager: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -67,6 +74,10 @@ export default {
       } else if (this.type === 'instance') {
         this.$emit('click', { host: this.hostname, type: this.title })
       }
+    },
+    handlerManageClick(e) {
+      e.stopPropagation()
+      this.$emit('manage', { programName: this.title, version: this.version })
     }
   }
 }

@@ -1,19 +1,22 @@
 <template>
-  <el-row :gutter="5" class="main-row">
+  <el-row v-loading="fullScreenLoading" :gutter="5" class="main-row">
     <el-col :span="8">
       <el-card
-        header="服务类型列表"
+        header="程序类型列表"
         :body-style="{padding: '6px', height: height + 'px', overflowY: 'auto', overflowX: 'hidden'}"
       >
         <service-card
           v-for="service in services"
-          :key="service['serviceName']"
+          :key="services.indexOf(service)"
           style="margin-bottom: 3px"
-          :title="service['title']"
-          :service-name="service['serviceName']"
+          :class="[currentService===service['programName']?'selected-card':'']"
+          :title="service['programName']"
+          :service-name="service['programName']"
           :version="service['version']"
-          :description="service['description']"
+          :description="service['desc']"
+          :is-manager="true"
           @click="handleServiceClick"
+          @manage="handleProgramManage"
         />
       </el-card>
     </el-col>
@@ -33,14 +36,15 @@
                 <el-select v-model="versionForm.version">
                   <el-option
                     v-for="version in displayVersionList"
-                    :key="version['version']"
-                    :label="version['version']"
-                    :value="version['version']"
+                    :key="displayVersionList.indexOf(version)"
+                    :label="version['programVersion']"
+                    :value="version['programVersion']"
                   />
                 </el-select>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary">更新选中的实例</el-button>
+                <el-button type="primary" @click="handlerFileUpload">上传更新包&更新所有实例</el-button>
               </el-form-item>
             </el-form>
           </el-card>
@@ -55,6 +59,7 @@
                   :data="displayInstanceList"
                   :default-sort="{prop: 'uploadTime', order: 'descending'}"
                   :height="height - 128"
+                  stripe
                 >
                   <el-table-column
                     type="selection"
@@ -62,22 +67,26 @@
                   />
                   <el-table-column
                     type="index"
+                    label="NO."
                     width="50"
                   />
                   <el-table-column
                     prop="instance"
                     label="实例"
                     sortable
+                    align="center"
                   />
                   <el-table-column
                     prop="version"
                     label="当前版本号"
                     sortable
+                    align="center"
                   />
                   <el-table-column
                     prop="comment"
                     label="备注"
                     :show-overflow-tooltip="true"
+                    align="center"
                   />
                 </el-table>
               </el-col>
@@ -86,14 +95,19 @@
         </el-col>
       </el-row>
     </el-col>
+    <package-file-upload-modal ref="PacFileModal" />
+    <ProgramManageModal ref="xModalProgramManage" :program-name="currentProgramManage" :package-list="currentPackageList" />
   </el-row>
 </template>
 
 <script>
 import ServiceCard from '@/modules/service-control/components/ServiceCard'
+import PackageFileUploadModal from '@/modules/service-control/modal/PackageFileUploadModal'
+import { getPackgeList } from '@/api/monitor'
+import ProgramManageModal from '@/modules/service-control/modal/ProgramManageModal'
 export default {
   name: 'BCNewVerFileUpload',
-  components: { ServiceCard },
+  components: { ProgramManageModal, PackageFileUploadModal, ServiceCard },
   data() {
     return {
       versionForm: {
@@ -108,29 +122,14 @@ export default {
         ip: ''
       },
       NewVersionFile: [],
-      services: [
-        { title: 'BC', serviceName: 'CIS SYSTEM', version: '3.2.5', description: '用于采集设备数据以及发送控制指令的程序服务' },
-        { title: 'EQ-LINK', serviceName: 'EQ LINK SERVICE', version: '1.3.20', description: '消息中间件服务' }
-      ],
-      versionList: {
-        'CIS SYSTEM': [
-          { version: '3.2.5', uploadTime: '2021-06-10 12:30:21', uploadUser: 'admin', comment: '修订bug' },
-          { version: '2.2.9', uploadTime: '2021-05-20 12:12:25', uploadUser: 'admin', comment: '修订bug' },
-          { version: '1.0.0', uploadTime: '2021-05-12 12:22:10', uploadUser: 'admin', comment: '修订bug' }
-        ],
-        'EQ LINK SERVICE': [
-          { version: '1.3.20', uploadTime: '2021-05-12 12:22:10', uploadUser: 'admin', comment: '修订bug' }
-        ]
-      },
+      allServicesInfo: [],
+      services: [],
       displayVersionList: [],
-      serviceInstanceList: [
-        { version: '3.2.5', instance: '10.3.5.122:6255', uploadUser: 'admin', comment: 'LINE1#CUT1', service: 'CIS SYSTEM' },
-        { version: '2.2.9', instance: '10.3.5.112:6255', uploadUser: 'admin', comment: 'LINE1#CUT1', service: 'CIS SYSTEM' },
-        { version: '1.0.0', instance: '10.3.5.123:6255', uploadUser: 'admin', comment: 'LINE1#BND1', service: 'CIS SYSTEM' },
-        { version: '1.3.20', instance: '10.3.5.122:5862', uploadUser: 'admin', comment: '修订bug', service: 'EQ LINK SERVICE' }
-      ],
       displayInstanceList: [],
-      currentService: ''
+      currentService: '',
+      currentProgramManage: '',
+      currentPackageList: [],
+      fullScreenLoading: false
     }
   },
   computed: {
@@ -139,18 +138,60 @@ export default {
     }
   },
   mounted() {
-    if (this.versionList) {
-      this.currentService = Object.keys(this.versionList)[0]
-      this.displayVersionList = this.versionList[this.currentService]
-      this.displayInstanceList = this.serviceInstanceList.filter(instance => { return instance['service'] === this.currentService })
-    }
+    this.initData()
   },
   methods: {
+    async initData() {
+      this.fullScreenLoading = true
+      const res = await getPackgeList()
+      const programName = []
+      if (res && res['res']) {
+        this.allServicesInfo = res['res']
+        this.allServicesInfo.forEach(l => {
+          const p = l['programName']
+          const v = l['programVersion']
+          const d = l['programDesc']
+          const l_t = programName.filter((pt) => { return pt['programName'] === p })
+          if (l_t.length === 0) {
+            programName.push({ programName: p, version: v, desc: d })
+          } else {
+            if (v > l_t[0]['version']) {
+              l_t[0]['version'] = v
+            }
+          }
+        })
+        this.services = programName
+        this.displayInstanceList = res['res']
+        if (this.services.length > 0) {
+          this.currentService = this.services[0]['programName']
+          this.refreshSelectData()
+        }
+      }
+
+      this.fullScreenLoading = false
+    },
+    refreshSelectData() {
+      const v_list = []
+      const list = this.allServicesInfo.filter(ser => { return ser['programName'] === this.currentService })
+      list.forEach(l => {
+        if (v_list.filter(vl => { return vl['programVersion'] === l['programVersion'] }).length === 0) {
+          v_list.push({ programVersion: l['programVersion'] })
+        }
+      })
+      this.displayVersionList = v_list
+    },
     handleServiceClick(serviceName) {
       this.$refs['VersionForm'].resetFields()
       this.currentService = serviceName
-      this.displayVersionList = this.versionList[serviceName]
-      this.displayInstanceList = this.serviceInstanceList.filter(instance => { return instance['service'] === serviceName })
+      this.refreshSelectData()
+    },
+    handlerFileUpload() {
+      this.$refs.PacFileModal.show()
+    },
+    handleProgramManage(data) {
+      this.currentProgramManage = data['programName']
+      this.currentPackageList = this.allServicesInfo.filter(ser => { return ser['programName'] === data['programName'] })
+      this.$refs.xModalProgramManage.show()
     }
   }
 }
@@ -176,5 +217,8 @@ export default {
   ::v-deep .el-form-item{
     margin-bottom: 0;
   }
+}
+.selected-card {
+  background-color: #f5ffe5;
 }
 </style>
