@@ -71,21 +71,26 @@
                     width="50"
                   />
                   <el-table-column
-                    prop="instance"
+                    prop="serviceHost"
                     label="实例"
                     sortable
                     align="center"
                   />
                   <el-table-column
-                    prop="version"
-                    label="当前版本号"
-                    sortable
+                    prop="serviceType"
+                    label="服务器类型"
                     align="center"
                   />
                   <el-table-column
-                    prop="comment"
-                    label="备注"
-                    :show-overflow-tooltip="true"
+                    prop="sysName"
+                    label="系统名称"
+                    align="center"
+                    show-overflow-tooltip
+                  />
+                  <el-table-column
+                    prop="sysVersion"
+                    label="系统版本"
+                    sortable
                     align="center"
                   />
                 </el-table>
@@ -103,7 +108,7 @@
 <script>
 import ServiceCard from '@/modules/service-control/components/ServiceCard'
 import PackageFileUploadModal from '@/modules/service-control/modal/PackageFileUploadModal'
-import { getPackgeList } from '@/api/monitor'
+import { getPackgeList, getServerListByProgramInfo } from '@/api/monitor'
 import ProgramManageModal from '@/modules/service-control/modal/ProgramManageModal'
 export default {
   name: 'BCNewVerFileUpload',
@@ -129,7 +134,8 @@ export default {
       currentService: '',
       currentProgramManage: '',
       currentPackageList: [],
-      fullScreenLoading: false
+      fullScreenLoading: false,
+      tableLoading: false
     }
   },
   computed: {
@@ -161,10 +167,10 @@ export default {
           }
         })
         this.services = programName
-        this.displayInstanceList = res['res']
         if (this.services.length > 0) {
           this.currentService = this.services[0]['programName']
           this.refreshSelectData()
+          this.refreshTableData()
         }
       }
 
@@ -180,10 +186,21 @@ export default {
       })
       this.displayVersionList = v_list
     },
+    refreshTableData() {
+      this.tableLoading = true
+      const params = { programName: this.currentService }
+      getServerListByProgramInfo(params).then(res => {
+        if (res && res['res']) {
+          this.tableLoading = false
+          this.displayInstanceList = res['res']
+        }
+      })
+    },
     handleServiceClick(serviceName) {
       this.$refs['VersionForm'].resetFields()
       this.currentService = serviceName
       this.refreshSelectData()
+      this.refreshTableData()
     },
     handlerFileUpload() {
       this.$refs.PacFileModal.show()

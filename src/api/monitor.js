@@ -92,3 +92,11 @@ export function deletePackage(data) {
   })
 }
 
+export function getServerListByProgramInfo(data) {
+  return cis_request({
+    url: '/app/server-manager/program-package-run-server',
+    method: 'get',
+    params: data
+  })
+}
+

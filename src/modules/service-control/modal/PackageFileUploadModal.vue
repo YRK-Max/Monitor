@@ -55,7 +55,7 @@
         </el-form-item>
       </el-col>
       <el-col :span="24">
-        <el-form-item label="程序描述"><el-input v-model="formData.programDesc" /></el-form-item>
+        <el-form-item label="程序描述" prop="programDesc"><el-input v-model="formData.programDesc" /></el-form-item>
       </el-col>
       <el-card
         shadow="none"
@@ -189,7 +189,8 @@ export default {
       logConfList: [],
       rules: {
         programName: [{ required: true }],
-        programVersion: [{ required: true }]
+        programVersion: [{ required: true }],
+        programDesc: [{ required: true }]
       },
       isComplete: true,
       instanceList: [],
@@ -233,15 +234,19 @@ export default {
     handlerSubmit() {
       this.submitLoading = true
       console.log(this.formData)
-      this.$refs.xFormUploadFile.validate((valid) => {
+      this.$refs.xFormUploadFile.validate(async(valid) => {
         if (valid) {
           for (const instance of this.installInstanceList) {
-            upload_program(this.formData, { serverHost: instance }).then(res => {
-              this.submitLoading = false
-              if (res['code'] === 200) {
+            const res = await upload_program(this.formData, { serverHost: instance })
+            if (res['code'] === 200) {
+              if (this.installInstanceList.indexOf(instance) === (this.installInstanceList.length - 1)) {
                 this.$message.success('更新成功')
+                this.submitLoading = false
               }
-            })
+            } else {
+              this.$message.error(instance + ' -- 更新失败')
+              this.submitLoading = false
+            }
           }
         }
       })
@@ -269,7 +274,6 @@ export default {
       const row_real = JSON.parse(JSON.stringify(row))
       this.logConfList.splice(this.logConfList.indexOf(row), 1)
       delete row_real['isSet']
-      console.log(this.formData.logParameters.indexOf(row_real))
     }
   }
 }
