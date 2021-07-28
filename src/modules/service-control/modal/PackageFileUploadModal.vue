@@ -320,7 +320,7 @@ export default {
       const list_t = this.packageList.filter(package_t => { return package_t['programName'] === data })
       list_t.sort(this.compare('programVersion'))
       this.formData = list_t[0]
-      console.log(this.formData)
+      this.logConfList = JSON.parse(JSON.stringify(list_t[0]['logParameters']))
     },
     compare(p) { // 这是比较函数
       return function(x, y) {

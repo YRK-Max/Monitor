@@ -129,7 +129,7 @@
         </el-table>
       </el-card>
     </el-col>
-    <process-control-modal ref="xProcessControlModal" :current-service="currentService" :current-server-host="currentServerHost" />
+    <process-control-modal ref="xProcessControlModal" :current-service="currentService" :current-server-host="currentServerHost" @close="handleClose" />
   </el-row>
 </template>
 
@@ -213,6 +213,9 @@ export default {
       } else {
         this.serviceInstanceList = this.serviceInstanceListSource
       }
+    },
+    handleClose() {
+      this.getServiceNodeProcess(this.currentServerHost)
     }
   }
 }

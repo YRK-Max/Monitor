@@ -4,6 +4,7 @@
     :visible.sync="dialogVisible"
     width="320px"
     class="main-dialog"
+    @close="handlerDialogClose"
   >
     <div class="info-container">
       <div class="info-div">
@@ -77,6 +78,9 @@ export default {
         }
         this.stopLoading = false
       })
+    },
+    handlerDialogClose() {
+      this.$emit('close', null)
     }
   }
 }
