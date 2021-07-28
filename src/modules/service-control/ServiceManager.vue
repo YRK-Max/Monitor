@@ -27,6 +27,7 @@
             :description="instance['sysVersion']"
             :title="instance['serviceType']"
             :os="instance['sysName']"
+            :class="[currentServerHost===instance['serviceHost'].split(':')[0]?'selected-card':'']"
             @click="handleInstanceClick"
           />
         </div>
@@ -128,6 +129,7 @@
         </el-table>
       </el-card>
     </el-col>
+    <process-control-modal ref="xProcessControlModal" :current-service="currentService" :current-server-host="currentServerHost" />
   </el-row>
 </template>
 
@@ -135,10 +137,11 @@
 import QuerySelect from '@/components/QuerySelect'
 import ServiceCard from '@/modules/service-control/components/ServiceCard'
 import { getAllServiceInstance, getProcessByHost } from '@/api/monitor'
+import ProcessControlModal from '@/modules/service-control/modal/ProcessControlModal'
 
 export default {
   name: 'ServiceManager',
-  components: { ServiceCard, QuerySelect },
+  components: { ProcessControlModal, ServiceCard, QuerySelect },
   data() {
     return {
       form: {
@@ -183,6 +186,7 @@ export default {
     handleManager(e, row) {
       e.stopPropagation()
       this.currentService = row
+      this.$refs.xProcessControlModal.show()
     },
     handleInstanceClick(data) {
       this.currentServerHost = data['host']
@@ -256,5 +260,8 @@ export default {
       padding: 10px;
     }
   }
+}
+.selected-card {
+  background-color: #f5ffe5;
 }
 </style>

@@ -71,27 +71,40 @@
                     width="50"
                   />
                   <el-table-column
-                    prop="serviceHost"
+                    prop="serverNodeDto.serviceHost"
                     label="实例"
                     sortable
                     align="center"
                   />
                   <el-table-column
-                    prop="serviceType"
+                    prop="serverNodeDto.serviceType"
                     label="服务器类型"
                     align="center"
                   />
                   <el-table-column
-                    prop="sysName"
+                    prop="serverNodeDto.sysName"
                     label="系统名称"
                     align="center"
                     show-overflow-tooltip
                   />
                   <el-table-column
-                    prop="sysVersion"
+                    prop="serverNodeDto.sysVersion"
                     label="系统版本"
                     sortable
                     align="center"
+                  />
+                  <el-table-column
+                    prop="processVersion"
+                    label="程序版本"
+                    sortable
+                    align="center"
+                  />
+                  <el-table-column
+                    prop="updateTime"
+                    label="更新时间"
+                    sortable
+                    align="center"
+                    show-overflow-tooltip
                   />
                 </el-table>
               </el-col>

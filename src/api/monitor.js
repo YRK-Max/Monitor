@@ -56,6 +56,14 @@ export function getProgramConf(data) {
   })
 }
 
+export function stopProcess(data) {
+  return cis_request({
+    url: '/app/server-manager/stop-server-node-process',
+    method: 'post',
+    data: data
+  })
+}
+
 // 文件上传
 export function upload_file(data) {
   return cis_request({
@@ -97,6 +105,14 @@ export function getServerListByProgramInfo(data) {
     url: '/app/server-manager/program-package-run-server',
     method: 'get',
     params: data
+  })
+}
+
+// Grafana and Prometheus Config
+export function getGrafanaDashboardConf() {
+  return cis_request({
+    url: '/app/config/grafana-dashboard-confs',
+    method: 'get'
   })
 }
 

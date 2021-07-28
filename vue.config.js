@@ -33,7 +33,7 @@ module.exports = {
     port: port,
     proxy: {
       '/connect': {
-        target: 'http://10.4.2.235:44369',
+        target: 'http://10.3.5.124:44369',
         ws: false,
         changeOrigin: true
       },
@@ -46,7 +46,7 @@ module.exports = {
         }
       },
       '/cisApi': {
-        target: 'http://10.4.2.235:44398',
+        target: 'http://10.3.5.124:44398',
         ws: false,
         changeOrigin: true,
         pathRewrite: {

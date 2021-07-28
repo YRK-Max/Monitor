@@ -25,7 +25,7 @@
         <el-table
           :data="instanceList"
           :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
-          :height="300"
+          :height="height - 320"
           highlight-current-row
           @row-click="handlerInstanceListClick"
         >
@@ -46,59 +46,11 @@
         </el-table>
       </el-card>
     </el-col>
-    <el-col :span="24">
-      <el-card
-        header="Prometheus 配置"
-      >
-        <el-row>
-          <el-col :span="24">
-            <el-form label-width="150px" label-position="left" :model="PrometheusForm" :rules="PrometheusFormRules">
-              <el-form-item label="scrape_interval" prop="scrape_interval">
-                <el-input-number v-model="PrometheusForm.scrape_interval" style="width: 220px" /><label style="margin-left: 12px">S</label>
-              </el-form-item>
-              <el-form-item label="evaluation_interval" prop="evaluation_interval">
-                <el-input-number v-model="PrometheusForm.evaluation_interval" style="width: 220px" /><label style="margin-left: 12px">S</label>
-              </el-form-item>
-            </el-form>
-          </el-col>
-          <el-col :span="24">
-            <el-button style="margin-bottom: 10px" type="primary" icon="el-icon-plus">添加节点</el-button>
-            <el-table
-              :data="targetList"
-              :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
-            >
-              <el-table-column
-                type="selection"
-                width="55"
-              />
-              <el-table-column
-                prop="labels.job"
-                label="Job Name"
-              />
-              <el-table-column
-                prop="labels.instance"
-                label="Instance"
-              />
-              <el-table-column
-                prop="scrapeUrl"
-                label="Scrape Url"
-              />
-            </el-table>
-          </el-col>
-          <el-col :span="24">
-            <div class="operation-panel">
-              <el-button type="success" style="float: right" icon="el-icon-refresh">重启生效</el-button>
-            </div>
-          </el-col>
-        </el-row>
-      </el-card>
-    </el-col>
     <grafana-conf-form-modal ref="xGrafanaFormModal" />
   </el-row>
 </template>
 
 <script>
-import { getAllNodeInfo } from '@/api/prometheus'
 import { getGrafanaDashboardConfs, deleteGrafanaDashboardConf, getPrometheusConf } from '@/api/monitor'
 import GrafanaConfFormModal from '@/modules/monitor/modal/GrafanaConfFormModal'
 
@@ -133,6 +85,11 @@ export default {
       instanceList: []
     }
   },
+  computed: {
+    height() {
+      return this.$store.getters.body_height
+    }
+  },
   created() {
     this.initData()
   },
@@ -150,9 +107,9 @@ export default {
       })
     },
     async refreshTargets() {
-      const targets = await getAllNodeInfo()
-      if (targets && targets['data']) {
-        this.targetList = targets['data']['activeTargets']
+      const targets = await getGrafanaDashboardConfs()
+      if (targets && targets['res']) {
+        this.targetList = targets['res']
       }
     },
     handlerInstanceListClick(row) {

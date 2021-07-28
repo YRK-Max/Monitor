@@ -17,8 +17,31 @@
       label-position="left"
       class="FileUploadForm"
     >
-      <el-col :span="12">
-        <el-form-item label="程序名" prop="programName"><el-input v-model="formData.programName" /></el-form-item>
+      <el-col :span="9">
+        <el-form-item label="程序名" prop="programName">
+          <el-input v-model="formData.programName" />
+        </el-form-item>
+      </el-col>
+      <el-col :span="3" style="height: 40px; display: flex; align-items: center">
+        <el-dropdown
+          @command="handleProgramSelect"
+        >
+          <span class="el-dropdown-link" style="color: #0099ff">
+            已有程序<i class="el-icon-arrow-down el-icon--right" />
+          </span>
+          <el-dropdown-menu
+            slot="dropdown"
+          >
+            <el-dropdown-item
+              v-for="p in programInfos"
+              :key="programInfos.indexOf(p)"
+              icon="el-icon-mobile"
+              :command="p"
+            >
+              {{ p }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-col>
       <el-col :span="12">
         <el-form-item label="版本号" prop="programVersion"><el-input v-model="formData.programVersion" /></el-form-item>
@@ -153,7 +176,7 @@
 </template>
 
 <script>
-import { getAllServiceInstance, upload_file, upload_program } from '@/api/monitor'
+import { getAllServiceInstance, getPackgeList, upload_file, upload_program } from '@/api/monitor'
 
 export default {
   name: 'PackageFileUploadModal',
@@ -167,7 +190,7 @@ export default {
         fileId: '',
         programDesc: '',
         programName: '',
-        isAgent: true,
+        isAgent: false,
         programVersion: '',
         logParameters: [],
         programFileData: {
@@ -194,7 +217,9 @@ export default {
       },
       isComplete: true,
       instanceList: [],
-      installInstanceList: []
+      installInstanceList: [],
+      programInfos: [],
+      packageList: null
     }
   },
   mounted() {
@@ -211,6 +236,19 @@ export default {
       getAllServiceInstance().then(res => {
         if (res && res['res']) {
           this.instanceList = res['res']
+        }
+      })
+
+      getPackgeList().then(res => {
+        if (res && res['res']) {
+          const array = []
+          const programs = res['res']
+          for (const program of programs) {
+            array.push(program['programName'])
+          }
+
+          this.programInfos = Array.from(new Set(array))
+          this.packageList = res['res']
         }
       })
     },
@@ -238,7 +276,7 @@ export default {
         if (valid) {
           for (const instance of this.installInstanceList) {
             const res = await upload_program(this.formData, { serverHost: instance })
-            if (res['code'] === 200) {
+            if (res['code'] === '200') {
               if (this.installInstanceList.indexOf(instance) === (this.installInstanceList.length - 1)) {
                 this.$message.success('更新成功')
                 this.submitLoading = false
@@ -261,6 +299,8 @@ export default {
       const row_real = JSON.parse(JSON.stringify(row))
       row['isSet'] = false
       delete row_real['isSet']
+      row_real['programName'] = this.formData.programName
+      row_real['programVersion'] = this.formData.programVersion
       this.formData.logParameters.push(row_real)
     },
     handleEdit(row) {
@@ -274,6 +314,24 @@ export default {
       const row_real = JSON.parse(JSON.stringify(row))
       this.logConfList.splice(this.logConfList.indexOf(row), 1)
       delete row_real['isSet']
+    },
+    handleProgramSelect(data) {
+      this.formData.programName = data
+      const list_t = this.packageList.filter(package_t => { return package_t['programName'] === data })
+      list_t.sort(this.compare('programVersion'))
+      this.formData = list_t[0]
+      console.log(this.formData)
+    },
+    compare(p) { // 这是比较函数
+      return function(x, y) {
+        if (x[p] < y[p]) {
+          return 1
+        } else if (x[p] > y[p]) {
+          return -1
+        } else {
+          return 0
+        }
+      }
     }
   }
 }
