@@ -1,9 +1,11 @@
 <template>
   <el-row v-loading="loading" class="main-row">
+    <el-col :span="24" style="margin: 5px 0 5px 10px">
+      <label>Host : </label><span>{{ currentServer.host }}</span>
+    </el-col>
     <el-col :span="24">
       <div style="padding: 6px">
-        <el-button type="primary">新增</el-button>
-        <el-button type="danger">删除</el-button>
+        <el-button type="primary" @click="handleAdd">新增</el-button>
       </div>
     </el-col>
     <el-col :span="24">
@@ -19,7 +21,7 @@
           :data="ConfList"
           :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
           tooltip-effect="dark"
-          :height="height+56"
+          :height="height+26"
         >
           <el-table-column
             type="index"
@@ -29,18 +31,13 @@
           <el-table-column
             prop="confId"
             label="Cofig ID"
-            width="80px"
+            width="200px"
             align="center"
+            show-overflow-tooltip
           />
           <el-table-column
             prop="programConfName"
             label="program Conf Name"
-            align="center"
-            width="200px"
-          />
-          <el-table-column
-            prop="programKey"
-            label="Program Key"
             align="center"
             width="200px"
           />
@@ -64,7 +61,16 @@
             align="center"
             :show-overflow-tooltip="true"
             width="200px"
-          />
+          >
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row['programKillOld']"
+                :disabled="true"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+              />
+            </template>
+          </el-table-column>
           <el-table-column
             prop="programStartCommand"
             label="Program Start Command"
@@ -92,7 +98,16 @@
             align="center"
             :show-overflow-tooltip="true"
             width="250px"
-          />
+          >
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row['programExecuteFileEnable']"
+                :disabled="true"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+              />
+            </template>
+          </el-table-column>
           <el-table-column
             prop="programRunPath"
             label="Program Run Path"
@@ -121,14 +136,17 @@
         </el-table>
       </el-card>
     </el-col>
+    <program-config-modal ref="xProgramConfigModal" :current-server-host="currentServer.host" :current-server-type="currentServer.type" />
   </el-row>
 </template>
 
 <script>
 import { getProgramConf } from '@/api/monitor'
+import ProgramConfigModal from '@/modules/service-control/modal/ProgramConfigModal'
 
 export default {
   name: 'ServiceManager',
+  components: { ProgramConfigModal },
   data() {
     return {
       currentServer: {
@@ -139,11 +157,7 @@ export default {
         type: ''
       },
       ConfList: [],
-      currentService: {
-        job: '',
-        health: 'up',
-        instance: ''
-      },
+      currentService: {},
       serviceTypeList: [
         { value: 'WebUI_Linux', label: 'WebUI_Linux' },
         { value: 'Cissystem_Linux', label: 'Cissystem_Linux' },
@@ -158,6 +172,13 @@ export default {
   computed: {
     height() {
       return this.$store.getters.body_height - 270
+    }
+  },
+  watch: {
+    '$route'(val) {
+      this.currentServer.host = val.query.host
+      this.currentServer.type = val.query.type
+      this.initInstanceData()
     }
   },
   created() {
@@ -177,7 +198,7 @@ export default {
     },
     getProgramConfig() {
       this.loading = true
-      const params = { serverHost: this.currentServer.host, serviceType: this.currentServer.type }
+      const params = { serviceHost: this.currentServer.host }
       getProgramConf(params).then(res => {
         if (res && res['res']) {
           this.ConfList = res['res']
@@ -198,6 +219,9 @@ export default {
     },
     handleDelete(row) {
       console.log(row)
+    },
+    handleAdd() {
+      this.$refs.xProgramConfigModal.show()
     }
   }
 }

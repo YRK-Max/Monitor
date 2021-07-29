@@ -139,7 +139,7 @@ export const asyncRoutes = [
         path: '/ProgramConf',
         component: () => import('@/modules/service-control/ProgramConf'),
         name: 'ProgramConf',
-        meta: { title: 'ProgramConf', icon: 'el-icon-document', noCache: false },
+        meta: { title: 'ProgramConf', icon: 'el-icon-document', noCache: true },
         hidden: true
       }
     ]

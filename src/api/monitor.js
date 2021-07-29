@@ -64,6 +64,14 @@ export function stopProcess(data) {
   })
 }
 
+export function programConfigCU(data) {
+  return cis_request({
+    url: '/app/server-manager/create-and-update-program-conf',
+    method: 'post',
+    data: data
+  })
+}
+
 // 文件上传
 export function upload_file(data) {
   return cis_request({
