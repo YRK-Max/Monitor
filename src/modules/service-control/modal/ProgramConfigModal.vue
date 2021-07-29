@@ -117,7 +117,8 @@
 </template>
 
 <script>
-import { getPackgeList, programConfigCU } from '@/api/monitor'
+import { getPackgeList } from '@/api/monitor'
+import { programConfigCU } from '@/api/serverManager'
 
 export default {
   name: 'ProgramConfigModal',

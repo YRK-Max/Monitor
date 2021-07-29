@@ -136,7 +136,7 @@
 <script>
 import QuerySelect from '@/components/QuerySelect'
 import ServiceCard from '@/modules/service-control/components/ServiceCard'
-import { getAllServiceInstance, getProcessByHost } from '@/api/monitor'
+import { getAllServiceInstance, getProcessByHost } from '@/api/serverManager'
 import ProcessControlModal from '@/modules/service-control/modal/ProcessControlModal'
 
 export default {

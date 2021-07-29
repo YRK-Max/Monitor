@@ -32,46 +32,6 @@ export function editGrafanaDashboardConf(data) {
   })
 }
 
-// service process manager
-export function getAllServiceInstance() {
-  return cis_request({
-    url: '/app/server-manager/server-node',
-    method: 'get'
-  })
-}
-
-export function getProcessByHost(data) {
-  return cis_request({
-    url: '/app/server-manager/server-node-process',
-    method: 'get',
-    params: data
-  })
-}
-
-export function getProgramConf(data) {
-  return cis_request({
-    url: '/app/server-manager/program-conf-program-conf',
-    method: 'get',
-    params: data
-  })
-}
-
-export function stopProcess(data) {
-  return cis_request({
-    url: '/app/server-manager/stop-server-node-process',
-    method: 'post',
-    data: data
-  })
-}
-
-export function programConfigCU(data) {
-  return cis_request({
-    url: '/app/server-manager/create-and-update-program-conf',
-    method: 'post',
-    data: data
-  })
-}
-
 // 文件上传
 export function upload_file(data) {
   return cis_request({

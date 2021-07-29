@@ -176,7 +176,8 @@
 </template>
 
 <script>
-import { getAllServiceInstance, getPackgeList, upload_file, upload_program } from '@/api/monitor'
+import { getPackgeList, upload_file, upload_program } from '@/api/monitor'
+import { getAllServiceInstance } from '@/api/serverManager'
 
 export default {
   name: 'PackageFileUploadModal',

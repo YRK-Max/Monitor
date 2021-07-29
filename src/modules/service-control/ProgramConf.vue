@@ -141,7 +141,7 @@
 </template>
 
 <script>
-import { getProgramConf } from '@/api/monitor'
+import { getProgramConf } from '@/api/serverManager'
 import ProgramConfigModal from '@/modules/service-control/modal/ProgramConfigModal'
 
 export default {

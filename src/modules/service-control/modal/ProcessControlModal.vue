@@ -34,13 +34,13 @@
       >
         <el-button slot="reference" :loading="stopLoading" :disabled="currentService['processRunStatus'] !== 'RUN'" type="danger">停止</el-button>
       </el-popconfirm>
-      <el-button :loading="startLoading" :disabled="currentService['processRunStatus'] === 'RUN'" type="success">启动</el-button>
+      <el-button :loading="startLoading" :disabled="currentService['processRunStatus'] === 'RUN'" type="success" @click="handleStart">启动</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
-import { stopProcess } from '@/api/monitor'
+import { startProcess, stopProcess } from '@/api/serverManager'
 
 export default {
   name: 'ProcessControlModal',
@@ -73,6 +73,7 @@ export default {
       stopProcess({ serverHost: this.currentServerHost, processName: this.currentService['processName'], processId: this.currentService['processId'] }).then(res => {
         if (res && res['mesg'] === 'OK') {
           this.$message.success('进程已结束')
+          this.dialogVisible = false
         } else {
           this.$message.error('进程未正确关闭')
         }
@@ -81,6 +82,21 @@ export default {
     },
     handlerDialogClose() {
       this.$emit('close', null)
+    },
+    handleStart() {
+      this.startLoading = true
+      startProcess(this.currentService['confId'], { serverHost: this.currentServerHost }).then(res => {
+        if (res && res['mesg'] === 'OK') {
+          this.$message.success('启动成功')
+          this.dialogVisible = false
+        } else {
+          this.$message.error('启动失败：' + res['mesg'])
+        }
+      }).catch(error => {
+        this.$message.error('启动失败：' + error)
+      }).finally(() => {
+        this.startLoading = false
+      })
     }
   }
 }
