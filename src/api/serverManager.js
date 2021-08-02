@@ -1,4 +1,12 @@
 import cis_request from '@/utils/request-cis'
+import qs from 'qs'
+
+export function getAllServerInstance() {
+  return cis_request({
+    url: '/app/server-manager/server-node',
+    method: 'get'
+  })
+}
 
 // service process manager
 export function startProcess(confId, data) {
@@ -18,6 +26,15 @@ export function stopProcess(data) {
   })
 }
 
+export function getProcessByHost(data) {
+  return cis_request({
+    url: '/app/server-manager/server-node-process',
+    method: 'get',
+    params: data
+  })
+}
+
+// Program Conf
 export function getProgramConf(data) {
   return cis_request({
     url: '/app/server-manager/program-conf',
@@ -34,18 +51,15 @@ export function programConfigCU(data) {
   })
 }
 
-export function getAllServiceInstance() {
+export function deleteProgramConfig(data) {
+  console.log(data)
   return cis_request({
-    url: '/app/server-manager/server-node',
-    method: 'get'
-  })
-}
-
-export function getProcessByHost(data) {
-  return cis_request({
-    url: '/app/server-manager/server-node-process',
-    method: 'get',
-    params: data
+    url: '/app/server-manager/program-conf',
+    method: 'delete',
+    params: data,
+    paramsSerializer: params => {
+      return qs.stringify(params, { arrayFormat: 'repeat' })
+    }
   })
 }
 

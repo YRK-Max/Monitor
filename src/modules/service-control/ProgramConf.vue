@@ -130,18 +130,18 @@
           >
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="handleDelete(scope.row)">删除</el-button>
-              <el-button type="text" size="small">编辑</el-button>
+              <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-card>
     </el-col>
-    <program-config-modal ref="xProgramConfigModal" :current-server-host="currentServer.host" :current-server-type="currentServer.type" />
+    <program-config-modal ref="xProgramConfigModal" :current-config="currentConfig" :current-server-host="currentServer.host" :current-server-type="currentServer.type" @close="handleDialogClose" />
   </el-row>
 </template>
 
 <script>
-import { getProgramConf } from '@/api/serverManager'
+import { deleteProgramConfig, getProgramConf } from '@/api/serverManager'
 import ProgramConfigModal from '@/modules/service-control/modal/ProgramConfigModal'
 
 export default {
@@ -153,6 +153,7 @@ export default {
         type: null,
         host: null
       },
+      currentConfig: {},
       form: {
         type: ''
       },
@@ -188,9 +189,7 @@ export default {
   },
   methods: {
     async initInstanceData() {
-      this.loading = true
       this.getProgramConfig()
-      this.loading = false
     },
     handleManager(e, row) {
       e.stopPropagation()
@@ -218,10 +217,24 @@ export default {
       }
     },
     handleDelete(row) {
-      console.log(row)
+      this.loading = true
+      deleteProgramConfig({ serverHost: this.currentServer.host, programConfIdItem: [row['confId']] }).then(res => {
+        if (res && res['mesg'] === 'OK') {
+          this.getProgramConfig()
+        } else {
+          this.$message.error('Error: ' + res['mesg'])
+        }
+      })
+    },
+    handleEdit(row) {
+      this.currentConfig = row
+      this.$refs.xProgramConfigModal.show()
     },
     handleAdd() {
       this.$refs.xProgramConfigModal.show()
+    },
+    handleDialogClose() {
+      this.getProgramConfig()
     }
   }
 }

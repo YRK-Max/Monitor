@@ -62,7 +62,7 @@
       <el-col :span="12">
         <el-form-item label="结束旧进程">
           <el-switch
-            v-model="programConfigForm.upgradePackge"
+            v-model="programConfigForm.programKillOld"
           />
         </el-form-item>
       </el-col>
@@ -123,6 +123,12 @@ import { programConfigCU } from '@/api/serverManager'
 export default {
   name: 'ProgramConfigModal',
   props: {
+    currentConfig: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
     currentServerHost: {
       type: String,
       default: ''
@@ -170,11 +176,20 @@ export default {
       programVersion: []
     }
   },
+  watch: {
+    currentConfig: {
+      handler(val) {
+        this.programConfigForm = JSON.parse(JSON.stringify(val))
+      },
+      deep: true
+    }
+  },
   mounted() {
     this.initData()
   },
   methods: {
     initData() {
+      this.programConfigForm = JSON.parse(JSON.stringify(this.currentConfig))
       this.programConfigForm.serverHost = this.currentServerHost
       this.programConfigForm.serverType = this.currentServerType.toLocaleLowerCase().indexOf('windows') > -1 ? 'Windows' : 'Linux'
       this.initSelect()
@@ -200,10 +215,20 @@ export default {
       this.$emit('close', null)
     },
     handlerSubmit() {
+      this.submitLoading = true
       this.$refs.xProgramConfigForm.validate(valid => {
         if (valid) {
           programConfigCU(this.programConfigForm).then(res => {
-            console.log(res)
+            if (res && res['mesg'] === 'OK') {
+              this.dialogVisible = false
+              this.$message.success('添加成功')
+            } else {
+              this.$message.error('添加失败：' + res['mesg'] || '结果为空')
+            }
+          }).catch(err => {
+            this.$message.error('添加失败：' + err)
+          }).finally(() => {
+            this.submitLoading = true
           })
         }
       })
@@ -219,8 +244,6 @@ export default {
       if (program.length > 0) {
         this.programConfigForm.programPackageId = program[0]['programPackageId']
       }
-
-      console.log(this.programConfigForm)
     }
   }
 }

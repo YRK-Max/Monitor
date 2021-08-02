@@ -136,7 +136,7 @@
 <script>
 import QuerySelect from '@/components/QuerySelect'
 import ServiceCard from '@/modules/service-control/components/ServiceCard'
-import { getAllServiceInstance, getProcessByHost } from '@/api/serverManager'
+import { getAllServerInstance, getProcessByHost } from '@/api/serverManager'
 import ProcessControlModal from '@/modules/service-control/modal/ProcessControlModal'
 
 export default {
@@ -173,7 +173,7 @@ export default {
   methods: {
     async initInstanceData() {
       this.loading = true
-      const serviceInstanceListRes = await getAllServiceInstance()
+      const serviceInstanceListRes = await getAllServerInstance()
       if (serviceInstanceListRes && serviceInstanceListRes['res'] && serviceInstanceListRes['res'].length > 0) {
         this.serviceInstanceListSource = serviceInstanceListRes['res']
         this.serviceInstanceList = this.serviceInstanceListSource

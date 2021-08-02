@@ -177,7 +177,7 @@
 
 <script>
 import { getPackgeList, upload_file, upload_program } from '@/api/monitor'
-import { getAllServiceInstance } from '@/api/serverManager'
+import { getAllServerInstance } from '@/api/serverManager'
 
 export default {
   name: 'PackageFileUploadModal',
@@ -234,7 +234,7 @@ export default {
       this.visible = false
     },
     initSelect() {
-      getAllServiceInstance().then(res => {
+      getAllServerInstance().then(res => {
         if (res && res['res']) {
           this.instanceList = res['res']
         }
