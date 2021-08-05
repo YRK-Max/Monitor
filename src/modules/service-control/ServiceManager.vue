@@ -4,7 +4,14 @@
       <el-card class="params-panel">
         <el-form :model="form" inline label-position="left">
           <el-form-item label="服务类型" label-width="90px">
-            <query-select v-model="form.type" :options="serviceTypeList" />
+            <el-select v-model="form.type" style="width: 200px" clearable>
+              <el-option
+                v-for="type in serviceTypes"
+                :key="type"
+                :value="type"
+                :label="type"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handlerSearch">查询</el-button>
@@ -134,14 +141,13 @@
 </template>
 
 <script>
-import QuerySelect from '@/components/QuerySelect'
 import ServiceCard from '@/modules/service-control/components/ServiceCard'
 import { getAllServerInstance, getProcessByHost } from '@/api/serverManager'
 import ProcessControlModal from '@/modules/service-control/modal/ProcessControlModal'
 
 export default {
   name: 'ServiceManager',
-  components: { ProcessControlModal, ServiceCard, QuerySelect },
+  components: { ProcessControlModal, ServiceCard },
   data() {
     return {
       form: {
@@ -151,12 +157,7 @@ export default {
       currentService: {},
       currentServerType: null,
       currentServerHost: null,
-      serviceTypeList: [
-        { value: 'WebUI_Linux', label: 'WebUI_Linux' },
-        { value: 'Cissystem_Linux', label: 'Cissystem_Linux' },
-        { value: 'CisServer_Windows', label: 'CisServer_Windows' },
-        { value: 'EQLinker_windows', label: 'EQLinker_windows' }
-      ],
+      serviceTypes: [],
       serviceInstanceListSource: [],
       serviceInstanceList: [],
       loading: false
@@ -173,12 +174,17 @@ export default {
   methods: {
     async initInstanceData() {
       this.loading = true
+      const list = []
       const serviceInstanceListRes = await getAllServerInstance()
       if (serviceInstanceListRes && serviceInstanceListRes['res'] && serviceInstanceListRes['res'].length > 0) {
         this.serviceInstanceListSource = serviceInstanceListRes['res']
         this.serviceInstanceList = this.serviceInstanceListSource
         this.currentServerType = this.serviceInstanceList[0]['serviceType']
         this.currentServerHost = (this.serviceInstanceList[0]['serviceHost']).split(':')[0]
+        this.serviceInstanceListSource.forEach(InsDS => {
+          list.push(InsDS['serviceType'])
+        })
+        this.serviceTypes = Array.from(new Set(list))
         this.getServiceNodeProcess(this.currentServerHost)
       }
       this.loading = false

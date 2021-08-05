@@ -1,5 +1,5 @@
 <template>
-  <el-row class="main-row" :gutter="6">
+  <el-row v-loading="loading" class="main-row" :gutter="6">
     <el-col :span="24">
       <el-card
         class="params-panel"
@@ -10,18 +10,18 @@
           label-position="left"
           label-width="80px"
         >
-          <el-form-item label="服务">
-            <el-select v-model="searchForm.service" style="width: 200px">
+          <el-form-item label="服务类型">
+            <el-select v-model="searchForm.service" style="width: 200px" clearable>
               <el-option
-                v-for="service in services"
-                :key="service.serviceName"
-                :value="service.serviceName"
-                :label="service.title"
+                v-for="type in serviceTypes"
+                :key="type"
+                :value="type"
+                :label="type"
               />
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">查询</el-button>
+            <el-button type="primary" @click="handlerSearch">查询</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -33,18 +33,19 @@
       >
         <service-card
           v-for="instance in serviceInstanceList"
-          :key="instance.hostname"
+          :key="instance['serviceHost']"
           type="instance"
           style="margin-bottom: 3px"
-          :hostname="instance.hostname"
-          :description="instance.description"
-          :title="instance.title"
-          :os="instance.os"
-          @click="handleServiceCardClick"
+          :hostname="instance['serviceHost'].split(':')[0]"
+          :description="instance['sysVersion']"
+          :title="instance['serviceType']"
+          :os="instance['sysName']"
+          :class="[currentServerHost===instance['serviceHost'].split(':')[0]?'selected-card':'']"
+          @click="handleInstanceClick"
         />
       </el-card>
     </el-col>
-    <el-col :span="16">
+    <el-col v-if="isSelectProgram" :span="16">
       <el-card
         header="日志文件目录"
         :body-style="{ padding: '5px' }"
@@ -95,12 +96,37 @@
         </el-table>
       </el-card>
     </el-col>
+    <el-col v-if="!isSelectProgram" :span="16">
+      <el-card
+        header="已安装程序列表"
+        :body-style="{ padding: '5px' }"
+      >
+        <el-table
+          v-loading="tableLoading"
+          element-loading-text="拼命加载中"
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="rgba(255, 255, 255, 0.8)"
+          :height="height - 10"
+          :data="tableProgramList"
+        >
+          <el-table-column
+            prop="processName"
+            label="程序名称"
+          />
+          <el-table-column
+            prop="processVersion"
+            label="程序版本"
+          />
+        </el-table>
+      </el-card>
+    </el-col>
   </el-row>
 </template>
 
 <script>
 import ServiceCard from '@/modules/service-control/components/ServiceCard'
 import { deepClone } from '@/utils'
+import { getAllServerInstance, getProcessByHost } from '@/api/serverManager'
 export default {
   name: 'BCLogDownload',
   components: { ServiceCard },
@@ -109,18 +135,19 @@ export default {
       searchForm: {
         service: ''
       },
-      services: [
-        { title: 'BC', serviceName: 'CIS SYSTEM', version: '3.2.5', description: '用于采集设备数据以及发送控制指令的程序服务' },
-        { title: 'EQ-LINK', serviceName: 'EQ LINK SERVICE', version: '1.3.20', description: '消息中间件服务' }
-      ],
+      serviceTypes: [],
       pathList: [],
-      serviceInstanceList: [
-        { hostname: '10.3.5.168:2020', description: 'LINE1#CUT1', title: 'CIS SYSTEM', os: 'Windows' },
-        { hostname: '10.3.5.113:8080', description: 'Report', title: 'OTHER', os: 'Linux' },
-        { hostname: '10.3.5.135:2020', description: 'LINE1#CUT1', title: 'CIS SYSTEM', os: 'Windows' }
-      ],
+      serviceInstanceList: [],
+      serviceInstanceListSource: [],
       displayFileList: [],
-      fileList: []
+      tableProgramList: [],
+      fileList: [],
+      loading: false,
+      tableLoading: false,
+      currentService: {},
+      currentServerType: null,
+      currentServerHost: null,
+      isSelectProgram: false
     }
   },
   computed: {
@@ -128,73 +155,48 @@ export default {
       return this.$store.getters.body_height - 235
     }
   },
-  mounted() {
-    if (this.serviceInstanceList && this.serviceInstanceList[0]) {
-      this.requestFileList(this.serviceInstanceList[0]['hostname'])
-    }
+  created() {
+    this.initInstanceData()
   },
   methods: {
+    async initInstanceData() {
+      this.loading = true
+      const list = []
+      const serviceInstanceListRes = await getAllServerInstance()
+      if (serviceInstanceListRes && serviceInstanceListRes['res'] && serviceInstanceListRes['res'].length > 0) {
+        this.serviceInstanceListSource = serviceInstanceListRes['res']
+        this.serviceInstanceList = this.serviceInstanceListSource
+        this.currentServerType = this.serviceInstanceList[0]['serviceType']
+        this.currentServerHost = (this.serviceInstanceList[0]['serviceHost']).split(':')[0]
+        this.serviceInstanceListSource.forEach(InsDS => {
+          list.push(InsDS['serviceType'])
+        })
+        this.serviceTypes = Array.from(new Set(list))
+      }
+      this.loading = false
+    },
     handleRowClick(row) {
       if (row['type'] === 'folder') {
         this.pathList.push({ index: this.pathList.length, fileName: row.fileName })
         this.displayFileList = this.getChildFileList()
       }
     },
-    handleServiceCardClick(data) {
-      this.requestFileList(data)
+    handleInstanceClick(data) {
+      this.currentServerHost = data['host']
+      this.currentServerType = data['type']
+      this.requestProgramList(data)
+    },
+    async requestProgramList(data) {
+      this.tableLoading = true
+      const res = await getProcessByHost({ serverHost: data['host'] })
+      if (res && res['res']) {
+        this.tableProgramList = res['res']
+      }
+      this.tableLoading = false
     },
     requestFileList(data) {
       this.pathList = []
-      // 模拟数据请求
-      setTimeout(() => {
-        if (data === '10.3.5.168:2020') {
-          this.fileList = [
-            {
-              fileName: '202105245658', dateModified: '2021-05-24 12:45:12', type: 'folder', size: '',
-              children: [
-                {
-                  fileName: '202105245658', dateModified: '2021-05-24 12:45:12', type: 'folder', size: '',
-                  children: [
-                    { fileName: '202105284568', dateModified: '2021-05-24 12:45:12', type: 'log', size: '102k' },
-                    { fileName: '202106102546', dateModified: '2021-05-24 12:45:12', type: 'log', size: '200k' }
-                  ]
-                },
-                { fileName: '202105284568', dateModified: '2021-05-24 12:45:12', type: 'log', size: '2k' },
-                { fileName: '202106102546', dateModified: '2021-05-24 12:45:12', type: 'log', size: '856k' }
-              ]
-            }
-          ]
-        } else if (data === '10.3.5.113:8080') {
-          this.fileList = [
-            {
-              fileName: '202105245658', dateModified: '2021-05-24 12:45:12', type: 'folder', size: '',
-              children: [
-                {
-                  fileName: '202105245658', dateModified: '2021-05-24 12:45:12', type: 'folder', size: '',
-                  children: [
-                    { fileName: '202105284568', dateModified: '2021-05-24 12:45:12', type: 'log', size: '102k' },
-                    { fileName: '202106102546', dateModified: '2021-05-24 12:45:12', type: 'log', size: '200k' }
-                  ]
-                },
-                { fileName: '202105284568', dateModified: '2021-05-24 12:45:12', type: 'log', size: '2k' },
-                { fileName: '202106102546', dateModified: '2021-05-24 12:45:12', type: 'log', size: '856k' }
-              ]
-            },
-            {
-              fileName: '202106115658', dateModified: '2021-05-24 12:45:12', type: 'folder', size: '',
-              children: [
-                {
-                  fileName: '202105245658', dateModified: '2021-05-24 12:45:12', type: 'folder', size: '',
-                  children: []
-                },
-                { fileName: '202105284568', dateModified: '2021-05-24 12:45:12', type: 'log', size: '2k' },
-                { fileName: '202106102546', dateModified: '2021-05-24 12:45:12', type: 'log', size: '856k' }
-              ]
-            }
-          ]
-        } else { this.fileList = [] }
-        this.displayFileList = this.getChildFileList()
-      }, 100)
+      this.displayFileList = this.getChildFileList()
     },
     handleBack() {
       this.pathList.pop()
@@ -209,6 +211,15 @@ export default {
         }
       })
       return result
+    },
+    handlerSearch() {
+      if (this.searchForm.service !== '') {
+        this.serviceInstanceList = this.serviceInstanceListSource.filter(instance => {
+          return instance['serviceType'] === this.searchForm.service
+        })
+      } else {
+        this.serviceInstanceList = this.serviceInstanceListSource
+      }
     }
   }
 }
@@ -223,5 +234,8 @@ export default {
   ::v-deep .el-col {
     margin-bottom: 5px;
   }
+}
+.selected-card {
+  background-color: #f5ffe5;
 }
 </style>
