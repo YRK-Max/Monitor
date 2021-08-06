@@ -6,6 +6,13 @@
   "description": "通用图标库",
   "glyphs": [
     {
+      "icon_id": "4922508",
+      "name": "返回",
+      "font_class": "back",
+      "unicode": "e670",
+      "unicode_decimal": 58992
+    },
+    {
       "icon_id": "1173777",
       "name": "monitor",
       "font_class": "monitor",

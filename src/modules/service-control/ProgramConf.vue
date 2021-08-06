@@ -136,7 +136,13 @@
         </el-table>
       </el-card>
     </el-col>
-    <program-config-modal ref="xProgramConfigModal" :current-config="currentConfig" :current-server-host="currentServer.host" :current-server-type="currentServer.type" @close="handleDialogClose" />
+    <program-config-modal
+      ref="xProgramConfigModal"
+      :current-config="currentConfig"
+      :current-server-host="currentServer.host"
+      :current-server-type="currentServer.type"
+      @close="handleDialogClose"
+    />
   </el-row>
 </template>
 
@@ -231,6 +237,7 @@ export default {
       this.$refs.xProgramConfigModal.show()
     },
     handleAdd() {
+      this.currentConfig = {}
       this.$refs.xProgramConfigModal.show()
     },
     handleDialogClose() {

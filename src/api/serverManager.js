@@ -52,7 +52,6 @@ export function programConfigCU(data) {
 }
 
 export function deleteProgramConfig(data) {
-  console.log(data)
   return cis_request({
     url: '/app/server-manager/program-conf',
     method: 'delete',
@@ -63,3 +62,20 @@ export function deleteProgramConfig(data) {
   })
 }
 
+// Log
+export function getLogFileTrees(data) {
+  return cis_request({
+    url: '/app/server-manager/service-logs-file-item',
+    method: 'get',
+    params: data
+  })
+}
+
+export function takeFilePck(programPackageId, info, pathList) {
+  return cis_request({
+    url: `/app/server-manager/pack-service-logs/${programPackageId}`,
+    method: 'post',
+    params: info,
+    data: pathList
+  })
+}

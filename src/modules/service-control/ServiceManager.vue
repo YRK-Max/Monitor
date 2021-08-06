@@ -103,15 +103,15 @@
             width="200px"
           />
           <el-table-column
-            prop="processPath"
-            label="进程路径"
+            prop="processVersion"
+            label="进程版本"
             align="center"
             :show-overflow-tooltip="true"
             width="200px"
           />
           <el-table-column
-            prop="processVersion"
-            label="进程版本"
+            prop="processPath"
+            label="进程路径"
             align="center"
             :show-overflow-tooltip="true"
             width="200px"

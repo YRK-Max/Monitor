@@ -4,6 +4,7 @@
     :visible.sync="dialogVisible"
     width="520px"
     class="main-dialog"
+    destroy-on-close
     @close="handlerDialogClose"
   >
     <el-form
@@ -77,25 +78,8 @@
         </el-form-item>
       </el-col>
       <el-col :span="24">
-        <el-form-item label="启动命令" prop="programStartCommand">
-          <el-input v-model="programConfigForm.programStartCommand" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="结束命令" prop="programStopCommand">
-          <el-input v-model="programConfigForm.programStopCommand" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="18">
         <el-form-item label="执行文件" prop="programExecuteFile">
           <el-input v-model="programConfigForm.programExecuteFile" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="6">
-        <el-form-item label="启用" label-width="60px" style="margin-left: 10px">
-          <el-switch
-            v-model="programConfigForm.programExecuteFileEnable"
-          />
         </el-form-item>
       </el-col>
       <el-col :span="24">
@@ -165,8 +149,6 @@ export default {
         programPackageName: [{ required: true }],
         programPackageVersion: [{ required: true }],
         programArgs: [{ required: true }],
-        programStartCommand: [{ required: true }],
-        programStopCommand: [{ required: true }],
         programExecuteFile: [{ required: true }],
         programRunPath: [{ required: true }],
         programPackgePath: [{ required: true }]
@@ -179,7 +161,28 @@ export default {
   watch: {
     currentConfig: {
       handler(val) {
-        this.programConfigForm = JSON.parse(JSON.stringify(val))
+        if (JSON.stringify(this.currentConfig) !== '{}') {
+          this.programConfigForm = JSON.parse(JSON.stringify(val))
+        } else {
+          this.programConfigForm = {
+            programConfName: '',
+            serverHost: this.currentServerHost,
+            serverType: this.currentServerType.toLocaleLowerCase().indexOf('windows') > -1 ? 'Windows' : 'Linux',
+            programPackageId: '',
+            programPackageName: '',
+            programPackageVersion: '',
+            upgradePackge: true,
+            programRunCount: 0,
+            programArgs: '',
+            programKillOld: true,
+            programStartCommand: '',
+            programStopCommand: '',
+            programExecuteFile: '',
+            programExecuteFileEnable: true,
+            programRunPath: '',
+            programPackgePath: ''
+          }
+        }
       },
       deep: true
     }
@@ -189,7 +192,9 @@ export default {
   },
   methods: {
     initData() {
-      this.programConfigForm = JSON.parse(JSON.stringify(this.currentConfig))
+      if (JSON.stringify(this.currentConfig) !== '{}') {
+        this.programConfigForm = JSON.parse(JSON.stringify(this.currentConfig))
+      }
       this.programConfigForm.serverHost = this.currentServerHost
       this.programConfigForm.serverType = this.currentServerType.toLocaleLowerCase().indexOf('windows') > -1 ? 'Windows' : 'Linux'
       this.initSelect()
@@ -228,7 +233,7 @@ export default {
           }).catch(err => {
             this.$message.error('添加失败：' + err)
           }).finally(() => {
-            this.submitLoading = true
+            this.submitLoading = false
           })
         }
       })

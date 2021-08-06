@@ -322,6 +322,7 @@ export default {
       list_t.sort(this.compare('programVersion'))
       this.formData = list_t[0]
       this.logConfList = JSON.parse(JSON.stringify(list_t[0]['logParameters']))
+      this.isComplete = false
     },
     compare(p) { // 这是比较函数
       return function(x, y) {
