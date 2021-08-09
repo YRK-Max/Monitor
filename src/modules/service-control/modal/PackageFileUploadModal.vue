@@ -279,11 +279,11 @@ export default {
             const res = await upload_program(this.formData, { serverHost: instance })
             if (res['code'] === '200') {
               if (this.installInstanceList.indexOf(instance) === (this.installInstanceList.length - 1)) {
-                this.$message.success('更新成功')
+                this.$message.success('上传成功')
                 this.submitLoading = false
               }
             } else {
-              this.$message.error(instance + ' -- 更新失败')
+              this.$message.error(instance + ' -- 上传失败')
               this.submitLoading = false
             }
           }

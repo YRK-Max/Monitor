@@ -38,12 +38,12 @@
                     v-for="version in displayVersionList"
                     :key="displayVersionList.indexOf(version)"
                     :label="version['programVersion']"
-                    :value="version['programVersion']"
+                    :value="version"
                   />
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary">更新选中的实例</el-button>
+                <el-button :loading="submitLoading" type="primary" @click="handlerUpdateInstance">更新选中的实例</el-button>
                 <el-button type="primary" @click="handlerFileUpload">上传更新包&更新所有实例</el-button>
               </el-form-item>
             </el-form>
@@ -54,12 +54,14 @@
             <el-row>
               <el-col :span="24">
                 <el-table
+                  v-loading="tableLoading"
                   tooltip-effect="dark"
                   :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
                   :data="displayInstanceList"
                   :default-sort="{prop: 'uploadTime', order: 'descending'}"
                   :height="height - 128"
                   stripe
+                  @selection-change="handleSelectionChange"
                 >
                   <el-table-column
                     type="selection"
@@ -121,7 +123,7 @@
 <script>
 import ServiceCard from '@/modules/service-control/components/ServiceCard'
 import PackageFileUploadModal from '@/modules/service-control/modal/PackageFileUploadModal'
-import { getPackgeList, getServerListByProgramInfo } from '@/api/monitor'
+import { getPackgeList, getServerListByProgramInfo, upload_program } from '@/api/monitor'
 import ProgramManageModal from '@/modules/service-control/modal/ProgramManageModal'
 export default {
   name: 'BCNewVerFileUpload',
@@ -148,7 +150,9 @@ export default {
       currentProgramManage: '',
       currentPackageList: [],
       fullScreenLoading: false,
-      tableLoading: false
+      submitLoading: false,
+      tableLoading: false,
+      selectedInstances: []
     }
   },
   computed: {
@@ -194,7 +198,7 @@ export default {
       const list = this.allServicesInfo.filter(ser => { return ser['programName'] === this.currentService })
       list.forEach(l => {
         if (v_list.filter(vl => { return vl['programVersion'] === l['programVersion'] }).length === 0) {
-          v_list.push({ programVersion: l['programVersion'] })
+          v_list.push(l)
         }
       })
       this.displayVersionList = v_list
@@ -214,6 +218,32 @@ export default {
       this.currentService = serviceName
       this.refreshSelectData()
       this.refreshTableData()
+    },
+    handlerUpdateInstance() {
+      this.$refs['VersionForm'].validate(async(valid) => {
+        if (valid) {
+          this.submitLoading = true
+          for (const instance of this.selectedInstances) {
+            const res = await upload_program(this.versionForm.version, { serverHost: instance })
+            if (res['status']) {
+              if (this.selectedInstances.indexOf(instance) === (this.selectedInstances.length - 1)) {
+                this.$message.success('更新成功')
+                this.submitLoading = false
+                this.refreshTableData()
+              }
+            } else {
+              this.$message.error(instance + ' -- 更新失败:' + res['mesg'])
+              this.submitLoading = false
+            }
+          }
+        }
+      })
+    },
+    handleSelectionChange(data) {
+      this.selectedInstances = []
+      data.forEach(d => {
+        this.selectedInstances.push(d['serverNodeDto']['serviceHost'])
+      })
     },
     handlerFileUpload() {
       this.$refs.PacFileModal.show()

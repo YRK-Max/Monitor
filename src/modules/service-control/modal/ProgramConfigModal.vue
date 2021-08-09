@@ -220,15 +220,15 @@ export default {
       this.$emit('close', null)
     },
     handlerSubmit() {
-      this.submitLoading = true
       this.$refs.xProgramConfigForm.validate(valid => {
         if (valid) {
+          this.submitLoading = true
           programConfigCU(this.programConfigForm).then(res => {
             if (res && res['mesg'] === 'OK') {
               this.dialogVisible = false
-              this.$message.success('添加成功')
+              this.$message.success('更新成功')
             } else {
-              this.$message.error('添加失败：' + res['mesg'] || '结果为空')
+              this.$message.error('更新失败：' + res['mesg'] || '结果为空')
             }
           }).catch(err => {
             this.$message.error('添加失败：' + err)
