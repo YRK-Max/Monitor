@@ -68,14 +68,14 @@
           </el-select>
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 10px">
-          <el-button @click="handleBack">上一级</el-button>
+          <el-button circle icon="el-icon-back" type="primary" size="mini" style="width: 30px; height: 30px;margin: 3px 0 0 5px" @click="handleBack" />
           <div style="flex-grow: 1; background: #fff5eb; padding: 10px; border-radius: 5px; margin: 0 10px 0 10px">
             <el-breadcrumb separator="/">
               <el-breadcrumb-item>root</el-breadcrumb-item>
               <el-breadcrumb-item v-for="path in pathList" :key="path['index']">{{ path['FileName'] }}</el-breadcrumb-item>
             </el-breadcrumb>
           </div>
-          <el-button type="primary" :loading="takeFilePckLoading" @click="takePckOfLog">{{ takePckText }}</el-button>
+          <el-button type="primary" size="small" :loading="takeFilePckLoading" @click="takePckOfLog">{{ takePckText }}</el-button>
         </div>
         <el-table
           ref="xFileList"
@@ -345,9 +345,13 @@ export default {
     refreshFileList() {
       this.tableOfFileLoading = true
       getLogFileTrees({ serviceHost: this.currentServerHost, programPackageId: this.currentPckInfo['programPackageId'], logId: this.logForm.logId }).then(res => {
-        if (res && res['res']) {
+        if (res && res['status']) {
           this.fileList = JSON.parse(res['res'])
           this.requestFileList()
+          this.tableOfFileLoading = false
+        } else {
+          this.$message.error(res['mesg'])
+          this.displayFileList = []
           this.tableOfFileLoading = false
         }
       })
