@@ -261,7 +261,7 @@ export const asyncRoutes = [
   {
     path: '/system',
     component: Layout,
-    meta: { title: 'systemManage', icon: 'el-icon-setting', roles: ['admin'] },
+    meta: { title: 'systemManage', icon: 'el-icon-setting', roles: ['admin', 'monitor'] },
     children: [
       {
         path: '/userManagement',
