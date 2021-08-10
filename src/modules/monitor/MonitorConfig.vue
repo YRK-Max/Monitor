@@ -10,7 +10,7 @@
             v-loading="tableLoading"
             :data="instanceList"
             :header-cell-style="{background:'#f1f8ff',color:'#67718c'}"
-            :height="height - 225"
+            :height="height - 235"
             highlight-current-row
             @row-click="handlerInstanceListClick"
           >
@@ -51,13 +51,13 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" size="small" @click="handleSearch">查询</el-button>
-              <el-button v-show="isChange" type="primary" size="small">提交</el-button>
+              <el-button v-show="isChange" type="primary" size="small" @click="handleEditSubmit">提交</el-button>
             </el-form-item>
           </el-form>
         </el-col>
         <el-col :span="24">
           <el-input
-            v-model="confContent"
+            v-model="currentConf.appConfData"
             type="textarea"
             rows="35"
             placeholder="请输入内容"
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { getGrafanaDashboardConfs, deleteGrafanaDashboardConf, getAppConfs } from '@/api/monitor'
+import { getGrafanaDashboardConfs, deleteGrafanaDashboardConf, getAppConfs, putAppConfs } from '@/api/monitor'
 import GrafanaConfFormModal from '@/modules/monitor/modal/GrafanaConfFormModal'
 
 export default {
@@ -107,7 +107,7 @@ export default {
         appConfName: 'grafana',
         serverType: 'Windows'
       },
-      confContent: '',
+      currentConf: {},
       appConfs: [],
       isChange: false
     }
@@ -140,7 +140,7 @@ export default {
             return r['appConfName'] === this.confForm.appConfName && r['serverType'] === this.confForm.serverType
           })
           if (list.length > 0) {
-            this.confContent = list[0]['appConfData']
+            this.currentConf = list[0]
           }
         } else {
           this.$message.error('无返回结果')
@@ -171,16 +171,23 @@ export default {
       this.$refs.xGrafanaFormModal.controlVisible(true, 'edit', row)
     },
     handleSearch() {
-      this.confContent = ''
+      this.currentConf = null
       const list = this.appConfs.filter(r => {
         return r['appConfName'] === this.confForm.appConfName && r['serverType'] === this.confForm.serverType
       })
       if (list.length > 0) {
-        this.confContent = list[0]['appConfData']
+        this.currentConf = list[0]
       }
     },
     handleContentChange() {
       this.isChange = true
+    },
+    handleEditSubmit() {
+      putAppConfs(this.currentConf).then(res => {
+        if (res) {
+          console.log(res)
+        }
+      })
     }
   }
 }

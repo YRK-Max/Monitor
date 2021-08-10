@@ -23,6 +23,14 @@ export function getAppConfs() {
   })
 }
 
+export function putAppConfs(data) {
+  return cis_request({
+    url: '/app/config/create-and-modify-grafana-prometheus-conf',
+    method: 'put',
+    data
+  })
+}
+
 export function deleteGrafanaDashboardConf(data) {
   return cis_request({
     url: '/app/config/grafana-dashboard-confs',
