@@ -105,7 +105,7 @@ export default {
       tableLoading: false,
       confForm: {
         appConfName: 'grafana',
-        serverType: 'Windows'
+        serverType: 'Linux'
       },
       currentConf: {},
       appConfs: [],

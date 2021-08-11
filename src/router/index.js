@@ -267,13 +267,13 @@ export const asyncRoutes = [
         path: '/userManagement',
         component: () => import('@/views/system/permission/UserManagement'),
         name: 'userManagement',
-        meta: { title: 'userManagement', icon: 'el-icon-user', noCache: false }
+        meta: { title: 'userManagement', icon: 'el-icon-user', noCache: false, roles: ['admin'] }
       },
       {
         path: '/roleManagement',
         component: () => import('@/views/system/permission/RoleManagement'),
         name: 'roleManagement',
-        meta: { title: 'roleManagement', icon: 'yiconrole_icon', noCache: false }
+        meta: { title: 'roleManagement', icon: 'yiconrole_icon', noCache: false, roles: ['admin'] }
       },
       {
         path: '/systemLog',
