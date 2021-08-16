@@ -54,13 +54,6 @@
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="程序更新">
-          <el-switch
-            v-model="programConfigForm.upgradePackge"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
         <el-form-item label="结束旧进程">
           <el-switch
             v-model="programConfigForm.programKillOld"
@@ -85,11 +78,6 @@
       <el-col :span="24">
         <el-form-item label="运行路径" prop="programRunPath">
           <el-input v-model="programConfigForm.programRunPath" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="程序包路径" prop="programPackgePath">
-          <el-input v-model="programConfigForm.programPackgePath" />
         </el-form-item>
       </el-col>
     </el-form>
@@ -149,9 +137,7 @@ export default {
         programPackageName: [{ required: true }],
         programPackageVersion: [{ required: true }],
         programArgs: [{ required: true }],
-        programExecuteFile: [{ required: true }],
-        programRunPath: [{ required: true }],
-        programPackgePath: [{ required: true }]
+        programExecuteFile: [{ required: true }]
       },
       programPkgList: [],
       programName: [],

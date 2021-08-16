@@ -252,7 +252,7 @@ export const asyncRoutes = [
       },
       {
         path: '/AlarmSetting',
-        component: () => import('@/views/notification/alarm/AlarmSetting'),
+        component: () => import('@/modules/monitor/AlarmSetting'),
         name: 'AlarmSetting',
         meta: { title: 'AlarmSetting', icon: 'el-icon-notebook-1', noCache: false }
       }
