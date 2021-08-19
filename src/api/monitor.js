@@ -99,3 +99,18 @@ export function getGrafanaDashboardConf() {
   })
 }
 
+// alarm
+export function getAllAlarmList() {
+  return cis_request({
+    url: '/app/alarm-manager/alarm-list',
+    method: 'get'
+  })
+}
+
+export function deleteAlarm(alarmId) {
+  return cis_request({
+    url: `/app/alarm-manager/alarm-close/${alarmId}`,
+    method: 'post'
+  })
+}
+

@@ -1,5 +1,9 @@
 <template>
-  <el-card class="main-card" shadow="hover">
+  <el-card
+    class="main-card"
+    shadow="hover"
+    @click.native="handlerClick"
+  >
     <el-row :gutter="8">
       <el-col :span="10">
         <label>类型</label>
@@ -40,15 +44,29 @@ export default {
     content: {
       type: String,
       default: 'null'
+    },
+    url: {
+      type: String,
+      default: 'null'
     }
   },
   computed: {
     degree() {
       switch (this.type) {
-        case 'severe': return 'danger'
-        case 'mid': return 'warning'
+        case 'CRITICAL':
+        case 'MAJOR': return 'danger'
+        case 'MINOR':
+        case 'WARNING': return 'warning'
         default: return 'info'
       }
+    }
+  },
+  methods: {
+    handlerClick() {
+      this.$router.push({
+        name: 'Grafana',
+        params: { url: this.url }
+      })
     }
   }
 }
@@ -69,6 +87,10 @@ export default {
       margin-right: 10px;
     }
   }
+}
+
+.main-card:hover {
+  background: #f5ffe5;
 }
 
 .content-label {

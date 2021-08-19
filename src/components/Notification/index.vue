@@ -17,10 +17,10 @@
             :time="alarm['time']"
             :source="alarm['source']"
             :content="alarm['content']"
+            :url="alarm['url']"
           />
         </div>
         <div class="button-panel">
-          <el-button style="margin-top: 15px" @click="handlerMoreClick">查看更多</el-button>
           <el-button type="primary" plain style="margin-top: 15px" @click="handlerClear">一键清除</el-button>
         </div>
         <div slot="reference" :class="alarmList.length >0?'alarm':'normal'">
@@ -34,24 +34,55 @@
 <script>
 import MessageCard from '@/views/notification/components/MessageCard'
 import EmptyPlaceholder from '@/components/EmptyPlaceholder'
+import { deleteAlarm, getAllAlarmList } from '@/api/monitor'
 export default {
   name: 'Notification',
   components: { EmptyPlaceholder, MessageCard },
   data() {
     return {
-      alarmList: [
-        { type: 'severe', time: '2021-06-04 14:00:00', source: '10.3.5.124:8081', content: '测试测试u成都上课纪律部队数据库表设计考虑搬家' },
-        { type: 'mid', time: '2021-06-04 14:00:00', source: '10.3.5.124:8081', content: '测试测试u成都上课纪律部队数据库表设计考虑搬家' },
-        { type: 'info', time: '2021-06-04 14:00:00', source: '10.3.5.124:8081', content: '测试测试u成都上课纪律部队数据库表设计考虑搬家' }
-      ]
+      alarmList: [],
+      timer: null
     }
   },
+  created() {
+    this.timer = null
+    this.getAlarmData()
+    this.timer = setInterval(() => {
+      this.getAlarmData()
+    }, 1000 * 60)
+  },
   methods: {
-    handlerMoreClick() {
-      this.$router.push('alarmList')
+    getAlarmData() {
+      getAllAlarmList().then(res => {
+        if (res && res['status']) {
+          this.alarmList = []
+          const result = res['res']
+          result.forEach(r => {
+            if (r['alarmStatus']) {
+              const alarm = {}
+              const alarm_data = JSON.parse(r['alarmData'])
+              alarm['id'] = r['id']
+              alarm['type'] = r['alarmType']
+              alarm['time'] = r['alarmTime'].substring(0, 19).replaceAll('T', ' ')
+              alarm['content'] = alarm_data['title']
+              alarm['source'] = alarm_data['evalMatches'][0]['tags']['instance']
+              alarm['url'] = alarm_data['ruleUrl'].replace('localhost', '10.3.5.124')
+              this.alarmList.push(alarm)
+            }
+          })
+        } else {
+          this.$message.error('获取报警数据失败')
+        }
+      })
     },
     handlerClear() {
-      this.alarmList = []
+      this.alarmList.forEach(alarm => {
+        deleteAlarm(alarm['id']).then(res => {
+          if (res && res['status']) {
+            this.alarmList = []
+          }
+        })
+      })
     }
   }
 }

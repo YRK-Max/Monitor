@@ -245,12 +245,6 @@ export const asyncRoutes = [
     meta: { title: 'notification', icon: 'el-icon-chat-line-round' },
     children: [
       {
-        path: '/alarmList',
-        component: () => import('@/views/notification/alarm/AlarmList'),
-        name: 'alarmList',
-        meta: { title: 'AlarmList', icon: 'el-icon-bell', noCache: false }
-      },
-      {
         path: '/AlarmSetting',
         component: () => import('@/modules/monitor/AlarmSetting'),
         name: 'AlarmSetting',
