@@ -4,7 +4,7 @@
     <el-collapse>
       <el-collapse-item name="1" title="设备">
         <ul class="svg-nav-list">
-          <li v-for="item in machineListT" :key="item.type">
+          <li v-for="item in machineListT" :key="machineListT.indexOf(item)">
             <div class="title">{{ item.title }}</div>
             <img
               :title="item.title"
@@ -18,7 +18,7 @@
       </el-collapse-item>
       <el-collapse-item name="2" title="辅助元素">
         <ul class="svg-nav-list">
-          <li v-for="item in assistItemListT" :key="item.type">
+          <li v-for="item in assistItemListT" :key="assistItemListT.indexOf(item)">
             <div class="title">{{ item.title }}</div>
             <img
               :title="item.title"

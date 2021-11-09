@@ -13,11 +13,6 @@
       </el-card>
     </el-col>
     <el-col :span="24">
-      <div style="margin: 10px">
-        <label>Grafana Server : </label><el-tag>{{ Grafana.server }}</el-tag>
-      </div>
-    </el-col>
-    <el-col :span="24">
       <el-card
         style="margin: 5px; width: calc(100% - 10px)"
         header
@@ -162,6 +157,7 @@
 
 <script>
 import { getAllNodeInfo, getOSNodeList } from '@/api/prometheus'
+import { getGrafanaDashboardConfs } from '@/api/monitor'
 
 export default {
   name: 'NodeList',
@@ -188,56 +184,7 @@ export default {
       const linux_list = []
       const windows_list = []
       let nodeInfoList = []
-      const url_ref_list = [
-        {
-          'Group': 'Dashboard',
-          'Name': 'Windows服务器监控',
-          'JOB': 'Cissystem_Linux',
-          'Targets': '10.3.5.124:9100',
-          'Uid': '9CWBz0bikw',
-          'Url': 'http://{@IPAddress}/d/9CWBz0bikw/linux-fu-wu-qi-jian-kong?orgId=1'
-        },
-        {
-          'Group': 'Dashboard',
-          'Name': 'Windows服务器监控',
-          'JOB': 'CisServer_Windows',
-          'Targets': '10.3.5.104:9182',
-          'Uid': 'Kdh0OoSGz',
-          'Url': 'http://{@IPAddress}/d/Kdh0OoSGz/windowsfu-wu-qi-jian-kong?orgId=1'
-        },
-        {
-          'Group': 'Dashboard',
-          'Name': '.NET Core -App',
-          'JOB': 'CisServerApi',
-          'Targets': '10.3.5.104:44344',
-          'Uid': 'h1FE3PpWk',
-          'Url': 'http://{@IPAddress}/d/h1FE3PpWk/net-core-app?orgId=1'
-        },
-        {
-          'Group': 'Dashboard',
-          'Name': 'Linux 服务器监控',
-          'JOB': 'EQLinker_windows',
-          'Targets': '10.3.5.109:9182',
-          'Uid': 'Kdh0OoSGz',
-          'Url': 'http://{@IPAddress}/d/Kdh0OoSGz/windowsfu-wu-qi-jian-kong?orgId=1&var-job=EQLinker_windows&var-hostname=All&var-instance=10.3.5.109:9182&var-show_hostname=DESKTOP-FIQS2U7'
-        },
-        {
-          'Group': 'Dashboard',
-          'Name': 'Linux 服务器监控',
-          'JOB': 'WebUI_Linux',
-          'Targets': '10.3.5.116:9100',
-          'Uid': '9CWBz0bikw',
-          'Url': 'http://{@IPAddress}/d/9CWBz0bikw/linux-fu-wu-qi-jian-kong?orgId=1&var-job=WebUI_Linux&var-hostname=All&var-node=10.3.5.116:9100&var-device=All&var-maxmount=%2F&var-show_hostname=localhost.localdomain'
-        },
-        {
-          'Group': 'Dashboard',
-          'Name': 'CIS30 服务器集合',
-          'JOB': '--',
-          'Targets': '10.3.5.124:3000',
-          'Uid': '-C03y-3Gz',
-          'Url': 'http://{@IPAddress}/d/-C03y-3Gz/cis30-fu-wu-qi-ji-he?orgId=1'
-        }
-      ]
+      const url_ref_list = await getGrafanaDashboardConfs()
       const res_nodeInfoList = await getAllNodeInfo()
       const res_list_linux = await getOSNodeList('node_uname_info')
       const res_list_windows = await getOSNodeList('windows_os_info')
@@ -263,8 +210,8 @@ export default {
           }
 
           for (const ref of url_ref_list) {
-            if (ref['JOB'] === temp['job']) {
-              temp['url'] = ref['Url'].replace('{@IPAddress}', this.Grafana.server) + '&kiosk'
+            if (ref['job'].toLocaleUpperCase() === temp['job'].toLocaleUpperCase()) {
+              temp['url'] = ref['url'] + '&kiosk'
               break
             }
           }
@@ -275,7 +222,7 @@ export default {
         res_list_windows['data']['result'].forEach(d => {
           const temp = d['metric']
           for (const ni of nodeInfoList) {
-            if (ni['labels']['job'] === temp['job']) {
+            if (ni['labels']['job'].toLocaleUpperCase() === temp['job'].toLocaleUpperCase()) {
               temp['active_state'] = ni['active_state']
               temp['health'] = ni['health']
               temp['lastError'] = ni['lastError']
@@ -283,8 +230,8 @@ export default {
             }
 
             for (const ref of url_ref_list) {
-              if (ref['JOB'] === temp['job']) {
-                temp['url'] = ref['Url'].replace('{@IPAddress}', this.Grafana.server) + '&kiosk'
+              if (ref['job'].toLocaleUpperCase() === temp['job'].toLocaleUpperCase()) {
+                temp['url'] = ref['url'] + '&kiosk'
                 break
               }
             }

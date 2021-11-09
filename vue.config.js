@@ -33,12 +33,12 @@ module.exports = {
     port: port,
     proxy: {
       '/connect': {
-        target: 'http://10.3.5.124:44369',
+        target: 'http://192.168.16.23:44369',
         ws: false,
         changeOrigin: true
       },
       '/prometheusApi': {
-        target: 'http://10.3.5.124:9090',
+        target: 'http://192.168.16.23:9090',
         ws: false,
         changeOrigin: true,
         pathRewrite: {
@@ -46,7 +46,7 @@ module.exports = {
         }
       },
       '/cisApi': {
-        target: 'http://10.3.5.124:44398',
+        target: 'http://192.168.16.23:44398',
         ws: false,
         changeOrigin: true,
         pathRewrite: {

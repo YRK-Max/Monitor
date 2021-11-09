@@ -160,6 +160,12 @@ export const asyncRoutes = [
         component: () => import('@/modules/layout-designer/LayoutDesigner'),
         name: 'LayoutDesigner',
         meta: { title: 'LayoutDesigner', icon: 'yiconset_configure_hov', noCache: false }
+      },
+      {
+        path: '/3DLayoutDesigner',
+        component: () => import('@/modules/3DLayout/Layout'),
+        name: 'LayoutDesigner',
+        meta: { title: 'LayoutDesigner', icon: 'yiconset_configure_hov', noCache: false }
       }
     ]
   },
